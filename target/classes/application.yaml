@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/M2S07-DB
+    username: postgres
+    password: 2424
+
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+
+  sql:
+    init:
+      mode: always
+
+server:
+  port: 7666
+
+  servlet:
+#    context-path=/DEVinPharmacy:
