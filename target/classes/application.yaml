@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/M2S07-DB
+    url: jdbc:postgresql://localhost:5432/farmaciadb
     username: postgres
     password: 2424
 
