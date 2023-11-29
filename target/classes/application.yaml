@@ -16,5 +16,5 @@ spring:
 server:
   port: 7666
 
-  servlet:
+#  servlet:
 #    context-path=/DEVinPharmacy:
