@@ -2,9 +2,15 @@ package com.devinhouse.DEVinPharmacy.model;
 
 import com.devinhouse.DEVinPharmacy.data.TipoMedicamento;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "MEDICAMENTOS")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Medicamento {
     @Id
     private Integer nroRegistro;
