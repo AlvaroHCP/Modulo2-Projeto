@@ -2,8 +2,12 @@ package com.devinhouse.DEVinPharmacy.model;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Data;
 
 @Embeddable
+@Table(name="ENDERECO")
+@Data
 public class Endereco {
     private Long cep;
     private String logradouro;
@@ -15,3 +19,6 @@ public class Endereco {
     private Double latitude;
     private Double longitude;
 }
+
+
+
