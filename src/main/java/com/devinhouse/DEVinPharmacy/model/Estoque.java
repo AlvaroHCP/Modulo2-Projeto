@@ -1,12 +1,10 @@
 package com.devinhouse.DEVinPharmacy.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -15,12 +13,17 @@ import java.time.LocalDateTime;
 @IdClass(IdEstoque.class)
 @Data
 @NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 public class Estoque {
     @Id
+    @Column(nullable = false)
     private Long cnpj;
     @Id
+    @Column(nullable = false)
     private Integer nroRegistro;
+    @Column(nullable = false)
     private Integer quantidade;
+    @Column(nullable = false)
     private LocalDateTime dataAtualizacao;
 }
