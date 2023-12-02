@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Table(name="FARMACIAS")
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Farmacia {
