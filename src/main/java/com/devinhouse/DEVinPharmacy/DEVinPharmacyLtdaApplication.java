@@ -17,8 +17,6 @@ public class DEVinPharmacyLtdaApplication {
 		SpringApplication.run(DEVinPharmacyLtdaApplication.class, args);
 	}
 
-	//TODO: Verify if the database is working properly
-	//TODO: Verify if the insert of the data bellow is working
 	//TODO: Insert the other data.
 	@Bean
 	CommandLineRunner run(FarmaciaRepository farmaciaRepo){
