@@ -13,11 +13,18 @@ public class FarmaciaRepositoryService {
     @Autowired
     FarmaciaRepository farmaciaRepo;
 
-    public Farmacia farmaciaSave(Farmacia farmacia){
+    public List<Farmacia> GetAll(){
+        return farmaciaRepo.findAll();
+    };
+//    public Farmacia Get(Farmacia farmacia){
+//        return farmaciaRepo.findById(farmacia.getCnpj());
+//    };
+
+    public Farmacia Save(Farmacia farmacia){
         return farmaciaRepo.save(farmacia);
     };
 
-    public List<Farmacia> farmaciaSave(List<Farmacia> farmacias){
+    public List<Farmacia> SaveAll(List<Farmacia> farmacias){
         return farmaciaRepo.saveAll(farmacias);
     };
 
