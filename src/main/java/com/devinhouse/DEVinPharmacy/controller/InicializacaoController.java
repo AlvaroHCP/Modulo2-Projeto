@@ -1,11 +1,9 @@
 package com.devinhouse.DEVinPharmacy.controller;
 
+import com.devinhouse.DEVinPharmacy.model.Estoque;
 import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.model.Medicamento;
-import com.devinhouse.DEVinPharmacy.service.FarmaciaInicializacaoService;
-import com.devinhouse.DEVinPharmacy.service.FarmaciaRepositoryService;
-import com.devinhouse.DEVinPharmacy.service.MedicamentoInicializacaoService;
-import com.devinhouse.DEVinPharmacy.service.MedicamentoRepositoryService;
+import com.devinhouse.DEVinPharmacy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +25,10 @@ public class InicializacaoController {
     MedicamentoRepositoryService medicamentoService;
     @Autowired
     MedicamentoInicializacaoService medicamentoInicializacaoService;
+    @Autowired
+    EstoqueRepositoryService estoqueService;
+    @Autowired
+    EstoqueInicializacaoService estoqueInicializacaoService;
 
     @PostMapping
     public ResponseEntity<HttpStatus> inicialize() {
@@ -39,6 +41,11 @@ public class InicializacaoController {
         if(medicamentoService.GetAll().isEmpty()) {
             List<Medicamento> medicamentos = medicamentoInicializacaoService.inicializarDados();
             medicamentoService.SaveAll(medicamentos);
+        }
+
+        if(estoqueService.GetAll().isEmpty()) {
+            List<Estoque> estoques = estoqueInicializacaoService.inicializarDados();
+            estoqueService.SaveAll(estoques);
         }
 
         return ResponseEntity.ok().build();
