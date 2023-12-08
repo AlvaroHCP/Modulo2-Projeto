@@ -1,6 +1,7 @@
 package com.devinhouse.DEVinPharmacy.controller;
 
 import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
+import com.devinhouse.DEVinPharmacy.dto.FarmaciaResponse;
 import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.service.FarmaciaRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,36 @@ public class FarmaciaController {
     @Autowired
     FarmaciaRepositoryService farmaciaRepoService;
     @GetMapping
-    public ResponseEntity<List<Farmacia>> farmaciasGet(){
+    public ResponseEntity<List<FarmaciaResponse>> farmaciasGet(){
         List<Farmacia> farmacias = farmaciaRepoService.GetAll();
-        return MyHttpResponse.farmaciasOk(farmacias);
+        List<FarmaciaResponse> farmaciaResponse = farmacias.stream().map(
+                farmacia -> new FarmaciaResponse(
+                        farmacia.getCnpj(),
+                        farmacia.getRazaoSocial(),
+                        farmacia.getNomeFantasia(),
+                        farmacia.getEmail(),
+                        farmacia.getTelefone(),
+                        farmacia.getCelular(),
+                        farmacia.getEndereco())
+        ).toList();
+        return MyHttpResponse.farmaciasOk(farmaciaResponse);
     };
 
     @GetMapping("/{cnpj}")
-    public ResponseEntity<Farmacia> farmaciaByCNPJ(@PathVariable Long cnpj){
+    public ResponseEntity<FarmaciaResponse> farmaciaByCNPJ(@PathVariable Long cnpj){
+//        FarmaciaResponse farmaciaResponse;
         Farmacia farmacia = farmaciaRepoService.Get(cnpj);
-        return MyHttpResponse.farmaciaOk(farmacia);
+        //FIXME: set the FarmaciaResponse class here.
+        FarmaciaResponse farmaciaResponse = new FarmaciaResponse(
+                farmacia.getCnpj(),
+                farmacia.getRazaoSocial(),
+                farmacia.getNomeFantasia(),
+                farmacia.getEmail(),
+                farmacia.getTelefone(),
+                farmacia.getCelular(),
+                farmacia.getEndereco());
+
+        //FIXME: if cnpj is not found in database, set 404 error with a message for the user.
+        return MyHttpResponse.farmaciaOk(farmaciaResponse);
     };
 }
