@@ -1,11 +1,11 @@
 package com.devinhouse.DEVinPharmacy.controller;
 
+import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.model.Estoque;
 import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.model.Medicamento;
 import com.devinhouse.DEVinPharmacy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +31,7 @@ public class InicializacaoController {
     EstoqueInicializacaoService estoqueInicializacaoService;
 
     @PostMapping
-    public ResponseEntity<HttpStatus> inicialize() {
+    public ResponseEntity<?> inicialize() {
 
         if (farmaciaService.GetAll().isEmpty()) {
             List<Farmacia> farmacias = farmaciaInicializacaoService.inicializarDados();
@@ -48,7 +48,6 @@ public class InicializacaoController {
             estoqueService.SaveAll(estoques);
         }
 
-        //TODO: Define the class responseHTML to send the responses of the methods.
-        return ResponseEntity.ok().build();
+        return MyHttpResponse.ok();
     };
 }
