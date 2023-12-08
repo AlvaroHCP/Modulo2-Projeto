@@ -18,34 +18,34 @@ import java.util.List;
 public class InicializacaoController {
 
     @Autowired
-    FarmaciaRepositoryService farmaciaService;
+    FarmaciaRepositoryService farmaciaRepoService;
     @Autowired
     FarmaciaInicializacaoService farmaciaInicializacaoService;
     @Autowired
-    MedicamentoRepositoryService medicamentoService;
+    MedicamentoRepositoryService medicamentoRepoService;
     @Autowired
     MedicamentoInicializacaoService medicamentoInicializacaoService;
     @Autowired
-    EstoqueRepositoryService estoqueService;
+    EstoqueRepositoryService estoqueRepoService;
     @Autowired
     EstoqueInicializacaoService estoqueInicializacaoService;
 
     @PostMapping
     public ResponseEntity<?> inicialize() {
 
-        if (farmaciaService.GetAll().isEmpty()) {
+        if (farmaciaRepoService.GetAll().isEmpty()) {
             List<Farmacia> farmacias = farmaciaInicializacaoService.inicializarDados();
-            farmaciaService.SaveAll(farmacias);
+            farmaciaRepoService.SaveAll(farmacias);
         }
 
-        if(medicamentoService.GetAll().isEmpty()) {
+        if(medicamentoRepoService.GetAll().isEmpty()) {
             List<Medicamento> medicamentos = medicamentoInicializacaoService.inicializarDados();
-            medicamentoService.SaveAll(medicamentos);
+            medicamentoRepoService.SaveAll(medicamentos);
         }
 
-        if(estoqueService.GetAll().isEmpty()) {
+        if(estoqueRepoService.GetAll().isEmpty()) {
             List<Estoque> estoques = estoqueInicializacaoService.inicializarDados();
-            estoqueService.SaveAll(estoques);
+            estoqueRepoService.SaveAll(estoques);
         }
 
         return MyHttpResponse.ok();
