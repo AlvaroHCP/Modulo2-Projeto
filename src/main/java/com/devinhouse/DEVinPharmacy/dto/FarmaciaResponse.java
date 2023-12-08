@@ -4,10 +4,12 @@ import com.devinhouse.DEVinPharmacy.model.Endereco;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.NonNullFields;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class FarmaciaResponse {
     private Long cnpj;
     private String razaoSocial;
@@ -17,9 +19,19 @@ public class FarmaciaResponse {
     private String celular;
     private Endereco endereco;
 
+    public FarmaciaResponse(Long cnpj, String razaoSocial, String nomeFantasia, String email, String telefone, String celular, Endereco endereco) {
+        this.cnpj = cnpj;
+        this.razaoSocial = razaoSocial;
+        this.nomeFantasia = nomeFantasia;
+        this.email = email;
+        this.telefone = telefone;
+        this.celular = celular;
+        this.endereco = endereco;
+    }
+
     @Override
     public String toString() {
-        return "{" +
+        return "AAAA{" +
                 "cnpj=" + cnpj +
                 ", razaoSocial='" + razaoSocial + '\'' +
                 ", nomeFantasia='" + nomeFantasia + '\'' +

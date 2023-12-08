@@ -48,6 +48,6 @@ public class InicializacaoController {
             estoqueRepoService.SaveAll(estoques);
         }
 
-        return MyHttpResponse.ok();
+        return ResponseEntity.ok().build();
     };
 }

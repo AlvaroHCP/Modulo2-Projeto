@@ -11,31 +11,31 @@ import java.util.List;
 
 public class MyHttpResponse {
 
-    public static ResponseEntity<HttpStatus> ok(){
-        return ResponseEntity.ok().build();
-    };
-    public static ResponseEntity<HttpStatus> badRequest(){
-        return ResponseEntity.badRequest().build();
-    };
-    public static ResponseEntity<Object> badRequestBody(Object message) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-    };
-    public static ResponseEntity<HttpStatus> noContent(){
-        return ResponseEntity.noContent().build();
-    };
-    public static ResponseEntity<Object> noContentBody(Object message) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(message);
-    };
-    public static ResponseEntity<HttpStatus> notFound(){
-        return ResponseEntity.notFound().build();
-    };
-    public static ResponseEntity<Object> notFoundBody(Object message) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
-    };
-
-    public static ResponseEntity<Object> Ok(Object body){
-        return ResponseEntity.ok(body);
-    };
+//    public static ResponseEntity<HttpStatus> ok(){
+//        return ResponseEntity.ok().build();
+//    };
+//    public static ResponseEntity<HttpStatus> badRequest(){
+//        return ResponseEntity.badRequest().build();
+//    };
+//    public static ResponseEntity<Object> badRequestBody(Object message) {
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+//    };
+//    public static ResponseEntity<HttpStatus> noContent(){
+//        return ResponseEntity.noContent().build();
+//    };
+//    public static ResponseEntity<Object> noContentBody(Object message) {
+//        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(message);
+//    };
+//    public static ResponseEntity<HttpStatus> notFound(){
+//        return ResponseEntity.notFound().build();
+//    };
+//    public static ResponseEntity<Object> notFoundBody(Object message) {
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+//    };
+//
+//    public static ResponseEntity<Object> Ok(Object body){
+//        return ResponseEntity.ok(body);
+//    };
 
 
     public static ResponseEntity<FarmaciaResponse> farmaciaOk(FarmaciaResponse body){

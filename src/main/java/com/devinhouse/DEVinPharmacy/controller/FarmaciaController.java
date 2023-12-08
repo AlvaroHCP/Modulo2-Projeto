@@ -4,8 +4,12 @@ import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.dto.FarmaciaResponse;
 import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.service.FarmaciaRepositoryService;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.NonNullFields;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,19 +40,21 @@ public class FarmaciaController {
 
     @GetMapping("/{cnpj}")
     public ResponseEntity<FarmaciaResponse> farmaciaByCNPJ(@PathVariable Long cnpj){
-//        FarmaciaResponse farmaciaResponse;
-        Farmacia farmacia = farmaciaRepoService.Get(cnpj);
-        //FIXME: set the FarmaciaResponse class here.
-        FarmaciaResponse farmaciaResponse = new FarmaciaResponse(
-                farmacia.getCnpj(),
-                farmacia.getRazaoSocial(),
-                farmacia.getNomeFantasia(),
-                farmacia.getEmail(),
-                farmacia.getTelefone(),
-                farmacia.getCelular(),
-                farmacia.getEndereco());
+        try {
+            Farmacia farmacia = farmaciaRepoService.Get(cnpj);
+            FarmaciaResponse farmaciaResponse = new FarmaciaResponse(
+                    farmacia.getCnpj(),
+                    farmacia.getRazaoSocial(),
+                    farmacia.getNomeFantasia(),
+                    farmacia.getEmail(),
+                    farmacia.getTelefone(),
+                    farmacia.getCelular(),
+                    farmacia.getEndereco());
+            return MyHttpResponse.farmaciaOk(farmaciaResponse);
+        } catch (BadRequestException e) {
+            FarmaciaResponse farmaciaResponse = new FarmaciaResponse();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(farmaciaResponse);
+        }
 
-        //FIXME: if cnpj is not found in database, set 404 error with a message for the user.
-        return MyHttpResponse.farmaciaOk(farmaciaResponse);
     };
 }
