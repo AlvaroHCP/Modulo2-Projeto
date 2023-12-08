@@ -20,13 +20,13 @@ public class Endereco {
     private String logradouro;
     @Column(nullable = false)
     private Integer numero;
-    private String complemento;
     @Column(nullable = false)
     private String bairro;
     @Column(nullable = false)
     private String cidade;
     @Column(nullable = false)
     private String estado;
+    private String complemento;
     @Column(nullable = false)
     private Double latitude;
     @Column(nullable = false)

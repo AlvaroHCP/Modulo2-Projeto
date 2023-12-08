@@ -21,10 +21,10 @@ public class FarmaciaInicializacaoService {
                         88888999L,
                         "Rua Porto Real",
                         67,
-                        "",
                         "Westeros",
                         "Berlim",
                         "SC",
+                        "",
                         15.23456,
                         2.8678687
                 )
@@ -41,10 +41,10 @@ public class FarmaciaInicializacaoService {
                         8877799L,
                         "Rua Madrid",
                         76,
-                        "",
                         "Winterfell",
                         "Estocolmo",
                         "SC",
+                        "",
                         19.254356,
                         3.8987687
                 )
