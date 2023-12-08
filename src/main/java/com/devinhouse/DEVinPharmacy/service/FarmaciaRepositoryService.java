@@ -1,11 +1,13 @@
 package com.devinhouse.DEVinPharmacy.service;
 
+import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.repository.FarmaciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FarmaciaRepositoryService {
@@ -16,9 +18,14 @@ public class FarmaciaRepositoryService {
     public List<Farmacia> GetAll(){
         return farmaciaRepo.findAll();
     };
-//    public Farmacia Get(Farmacia farmacia){
-//        return farmaciaRepo.findById(farmacia.getCnpj());
-//    };
+    public Farmacia Get(Long cnpj){
+//        Optional<Farmacia> cnpjQuery = farmaciaRepo.findById(cnpj);
+//        return cnpjQuery.get();
+//        Optional<Farmacia> cnpjQuery = farmaciaRepo.findById(cnpj).orElseThrow(new ObjetoNaoEncontradoException);
+        Farmacia farmacia = farmaciaRepo.findAll()
+                .stream().filter(item -> item.getCnpj().equals(cnpj)).toList().get(0);
+        return farmacia;
+    };
 
     public Farmacia Save(Farmacia farmacia){
         return farmaciaRepo.save(farmacia);

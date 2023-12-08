@@ -35,6 +35,8 @@ public class MyHttpResponse {
     public static ResponseEntity<Object> Ok(Object body){
         return ResponseEntity.ok(body);
     };
+
+
     public static ResponseEntity<Farmacia> farmaciaOk(Farmacia body){
         return ResponseEntity.ok(body);
     };
@@ -47,9 +49,7 @@ public class MyHttpResponse {
     public static ResponseEntity<List<Farmacia>> farmaciasOk(List<Farmacia> body){
         return ResponseEntity.ok(body);
     };
-    public static ResponseEntity<List<Medicamento>> medicamentosOk(List<Medicamento> body){
-        return ResponseEntity.ok(body);
-    };
+    public static ResponseEntity<List<Medicamento>> medicamentosOk(List<Medicamento> body){ return ResponseEntity.ok(body); };
     public static ResponseEntity<List<Estoque>> estoquesOk(List<Estoque> body){
         return ResponseEntity.ok(body);
     };

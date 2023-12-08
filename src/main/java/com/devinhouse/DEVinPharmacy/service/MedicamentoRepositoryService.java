@@ -1,8 +1,6 @@
 package com.devinhouse.DEVinPharmacy.service;
 
-import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.model.Medicamento;
-import com.devinhouse.DEVinPharmacy.repository.FarmaciaRepository;
 import com.devinhouse.DEVinPharmacy.repository.MedicamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
