@@ -22,9 +22,16 @@ public class MyHttpResponse {
     public static ResponseEntity<HttpStatus> noContent(){
         return ResponseEntity.noContent().build();
     };
+    public static ResponseEntity<?> noContentBody(Object message) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(message);
+    };
     public static ResponseEntity<HttpStatus> notFound(){
         return ResponseEntity.notFound().build();
     };
+    public static ResponseEntity<?> notFoundBody(Object message) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    };
+
     public static ResponseEntity<Object> Ok(Object body){
         return ResponseEntity.ok(body);
     };
