@@ -2,7 +2,6 @@ package com.devinhouse.DEVinPharmacy.service;
 
 import com.devinhouse.DEVinPharmacy.dto.EstoqueResponse;
 import com.devinhouse.DEVinPharmacy.model.Estoque;
-import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.repository.EstoqueRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,8 @@ public class EstoqueRepositoryService {
     @Autowired
     EstoqueRepository estoqueRepo;
     @Autowired
+    MedicamentoRepositoryService medicamentoRepoService;
+    @Autowired
     ModelMapper mapper;
 
     public List<Estoque> GetAll(){
@@ -25,8 +26,14 @@ public class EstoqueRepositoryService {
         List<Estoque> estoqueTotal = estoqueRepo.findAll()
                 .stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
         List<EstoqueResponse> estoqueResponse = estoqueTotal.stream().map(item ->
-                mapper.map(item, EstoqueResponse.class)
+            mapper.map(item, EstoqueResponse.class)
         ).toList();
+
+        estoqueResponse.forEach(item -> {
+            item.setNome(
+                    medicamentoRepoService.Get(item.getNroRegistro()).getNome()
+            );
+        });
         return estoqueResponse;
     };
 

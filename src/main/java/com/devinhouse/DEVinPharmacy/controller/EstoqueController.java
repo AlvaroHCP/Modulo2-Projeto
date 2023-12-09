@@ -21,10 +21,7 @@ public class EstoqueController {
     ModelMapper mapper;
 
     @GetMapping("{cnpj}")
-    public ResponseEntity<?> estoqueGet(@PathVariable Long cnpj){
-//        EstoqueResponse estoqueReponse = mapper.map(
-//                estoqueRepoService.Get(cnpj), EstoqueResponse.class
-//                );
+    public ResponseEntity<List<EstoqueResponse>> estoqueGet(@PathVariable Long cnpj){
         List<EstoqueResponse> estoqueReponse = estoqueRepoService.GetAllByCnpj(cnpj);
         return ResponseEntity.ok(estoqueReponse);
     };
