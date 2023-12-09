@@ -1,18 +1,18 @@
 package com.devinhouse.DEVinPharmacy.controller;
 
 import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
+import com.devinhouse.DEVinPharmacy.dto.FarmaciaRequest;
 import com.devinhouse.DEVinPharmacy.dto.FarmaciaResponse;
 import com.devinhouse.DEVinPharmacy.exception.ApiNotFoundException;
 import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.service.FarmaciaRepositoryService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -45,4 +45,23 @@ public class FarmaciaController {
 //        FarmaciaResponse farmaciaResponse = mapper.map(farmacia, FarmaciaResponse.class);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(notFound);
     };
+
+    @PostMapping
+    public ResponseEntity<?> inserirFarmacia(
+            @RequestBody @Valid @NotNull FarmaciaRequest farmaciaRequest){
+
+        Farmacia farmacia = farmaciaRepoService.Get(farmaciaRequest.getCnpj());
+        if(farmacia.getCnpj() != null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ApiNotFoundException(farmaciaRequest.getCnpj(),
+                            "Esta farmácia já existe, ou os seus dados estão inválidos!")
+            );
+        }
+        FarmaciaResponse farmaciaResponse = mapper.map(
+                farmaciaRepoService.Save(
+                        mapper.map(farmaciaRequest, Farmacia.class)
+                ), FarmaciaResponse.class
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(farmaciaResponse);
+    }
 }
