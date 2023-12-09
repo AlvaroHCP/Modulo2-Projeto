@@ -2,14 +2,13 @@ package com.devinhouse.DEVinPharmacy.controller;
 
 import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.dto.FarmaciaResponse;
+import com.devinhouse.DEVinPharmacy.exception.ApiNotFoundException;
 import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.service.FarmaciaRepositoryService;
-import org.apache.coyote.BadRequestException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.NonNullFields;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,39 +21,28 @@ import java.util.List;
 public class FarmaciaController {
     @Autowired
     FarmaciaRepositoryService farmaciaRepoService;
+    @Autowired
+    ModelMapper mapper;
     @GetMapping
     public ResponseEntity<List<FarmaciaResponse>> farmaciasGet(){
         List<Farmacia> farmacias = farmaciaRepoService.GetAll();
-        List<FarmaciaResponse> farmaciaResponse = farmacias.stream().map(
-                farmacia -> new FarmaciaResponse(
-                        farmacia.getCnpj(),
-                        farmacia.getRazaoSocial(),
-                        farmacia.getNomeFantasia(),
-                        farmacia.getEmail(),
-                        farmacia.getTelefone(),
-                        farmacia.getCelular(),
-                        farmacia.getEndereco())
+
+        List<FarmaciaResponse> farmaciaResponse = farmacias.stream().map(farmacia ->
+                mapper.map(farmacia, FarmaciaResponse.class)
         ).toList();
         return MyHttpResponse.farmaciasOk(farmaciaResponse);
     };
 
     @GetMapping("/{cnpj}")
-    public ResponseEntity<FarmaciaResponse> farmaciaByCNPJ(@PathVariable Long cnpj){
-        try {
-            Farmacia farmacia = farmaciaRepoService.Get(cnpj);
-            FarmaciaResponse farmaciaResponse = new FarmaciaResponse(
-                    farmacia.getCnpj(),
-                    farmacia.getRazaoSocial(),
-                    farmacia.getNomeFantasia(),
-                    farmacia.getEmail(),
-                    farmacia.getTelefone(),
-                    farmacia.getCelular(),
-                    farmacia.getEndereco());
+    public ResponseEntity<?> farmaciaByCNPJ(@PathVariable Long cnpj){
+        Farmacia farmacia = farmaciaRepoService.Get(cnpj);
+        if(farmacia.getCnpj() != null) {
+            FarmaciaResponse farmaciaResponse = mapper.map(farmacia, FarmaciaResponse.class);
             return MyHttpResponse.farmaciaOk(farmaciaResponse);
-        } catch (BadRequestException e) {
-            FarmaciaResponse farmaciaResponse = new FarmaciaResponse();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(farmaciaResponse);
         }
-
+        ApiNotFoundException notFound = new ApiNotFoundException(cnpj, "Registro Não encontrado.");
+//        FarmaciaResponse farmaciaResponse = mapper.map(notFound, FarmaciaResponse.class);
+//        FarmaciaResponse farmaciaResponse = mapper.map(farmacia, FarmaciaResponse.class);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(notFound);
     };
 }
