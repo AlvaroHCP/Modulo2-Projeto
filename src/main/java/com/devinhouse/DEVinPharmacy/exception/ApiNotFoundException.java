@@ -8,13 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiNotFoundException {
-    private Long cnpj;
+    private String codigo;
+
     private String message;
 
     @Override
     public String toString() {
         return "{" +
-                "cnpj=" + cnpj +
+                "item=" + codigo +
                 ", message='" + message + '\'' +
                 '}';
     }

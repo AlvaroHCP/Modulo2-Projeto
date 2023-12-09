@@ -16,16 +16,25 @@ public class MedicamentoRepositoryService {
     public List<Medicamento> GetAll(){
         return medicamentoRepo.findAll();
     };
-//    public Medicamento Get(Medicamento farmacia){
-//        return farmaciaRepo.findById(farmacia.getCnpj());
-//    };
 
-    public Medicamento Save(Medicamento farmacia){
-        return medicamentoRepo.save(farmacia);
+    public Medicamento Get(Integer registro) {
+        List<Medicamento> medicamentos = medicamentoRepo.findAll()
+                .stream().filter(item -> item.getNroRegistro().equals(registro)).toList();
+        if(medicamentos.isEmpty()) {
+//            throw new NotFoundException(registro, "Registro Não encontrado.");
+            Medicamento medicamento = new Medicamento();
+            return medicamento;
+        }
+
+        return medicamentos.get(0);
     };
 
-    public List<Medicamento> SaveAll(List<Medicamento> farmacias){
-        return medicamentoRepo.saveAll(farmacias);
+    public Medicamento Save(Medicamento medicamento){
+        return medicamentoRepo.save(medicamento);
+    };
+
+    public List<Medicamento> SaveAll(List<Medicamento> medicamentos){
+        return medicamentoRepo.saveAll(medicamentos);
     };
 
 }
