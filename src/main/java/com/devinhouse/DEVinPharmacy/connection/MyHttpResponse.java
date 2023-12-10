@@ -12,8 +12,8 @@ import java.util.List;
 public class MyHttpResponse {
 
     public static ResponseEntity<Object> statusBody(HttpStatus status, String message) {
-        String body = "{ \n\tCódigo: " + status + " - " + status.toString() +
-                ",\n\tMensagem de Erro: " + message + "\n}";
+        String body = "{ \n\tCódigo: " + status.value() + "\n\tStatus: " + status.name() +
+                ",\n\tMensagem: " + message + "\n}";
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     };
     public static ResponseEntity<HttpStatus> ok(){
