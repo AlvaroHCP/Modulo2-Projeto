@@ -35,8 +35,7 @@ public class EstoqueController {
         final Long cnpjRequest = estoqueRequest.getCnpj();
         final Integer nroRegistroRequest = estoqueRequest.getNroRegistro();
         final Integer quantidadeRequest = estoqueRequest.getQuantidade();
-        //FIXME: retornar erro com mensagem pra os RN01, RN02, e RN03
-        //TODO: Caso não hava cnpj e nroRegistro, criar o registro em Estoque
+
         if(quantidadeRequest < 1)
             return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST,
                     "A Quantidade deve ser um número inteiro maior que zero!");
@@ -44,16 +43,18 @@ public class EstoqueController {
         EstoqueAquisicaoResponse estoqueAquisicaoResponse =
                 estoqueRepoService.GetByCnpjAndRegistro(cnpjRequest, nroRegistroRequest);
 
-        if(estoqueAquisicaoResponse.getQuantidade() == null && estoqueAquisicaoResponse.getDataAtualizacao() == null) {
-
-            return MyHttpResponse.statusBody(HttpStatus.OK, "Devo incluir esse par no banco de dados!");
-        };
-
         if(estoqueAquisicaoResponse.getCnpj() == null)
             return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "CNPJ não existente!");
 
         if(estoqueAquisicaoResponse.getNroRegistro() == null)
             return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "Número de Registro não existente!");
+
+        if(estoqueAquisicaoResponse.getQuantidade() == null && estoqueAquisicaoResponse.getDataAtualizacao() == null) {
+            EstoqueAquisicaoResponse estouqeCriado = estoqueRepoService.Save(
+                    mapper.map(estoqueRequest, EstoqueAquisicaoResponse.class)
+            );
+            return ResponseEntity.ok(estouqeCriado);
+        };
 
         EstoqueAquisicaoResponse estoqueAtualizado = estoqueRepoService.aumentarEstoque(
                 estoqueAquisicaoResponse, quantidadeRequest);
