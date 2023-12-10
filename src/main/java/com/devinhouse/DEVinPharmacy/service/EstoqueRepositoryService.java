@@ -1,11 +1,14 @@
 package com.devinhouse.DEVinPharmacy.service;
 
+import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueAlteracaoResponse;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueResponse;
 import com.devinhouse.DEVinPharmacy.model.Estoque;
 import com.devinhouse.DEVinPharmacy.repository.EstoqueRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -107,5 +110,14 @@ public class EstoqueRepositoryService {
         aquisicao.setQuantidade(aquisicao.getQuantidade() + quantidade);
         return aquisicao;
     }
+
+    public ResponseEntity<Object> quantidadePositiva(Integer quantidade){
+        if(quantidade < 1)
+            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST,
+                    "A Quantidade deve ser um número inteiro maior que zero!");
+        System.out.println(ResponseEntity.ok().build().getStatusCode());
+        System.out.println(HttpStatus.OK);
+        return ResponseEntity.ok().build();
+    };
 
 }

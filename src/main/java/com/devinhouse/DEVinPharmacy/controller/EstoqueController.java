@@ -61,4 +61,39 @@ public class EstoqueController {
         EstoqueAlteracaoResponse estoqueSalvo = estoqueRepoService.Save(estoqueAtualizado);
         return ResponseEntity.ok(estoqueSalvo);
     };
+
+    @DeleteMapping
+    public ResponseEntity<Object> estoqueDelecao(@RequestBody @Valid @NotNull
+                                              EstoqueRequest estoqueRequest){
+        final Long cnpjRequest = estoqueRequest.getCnpj();
+        final Integer nroRegistroRequest = estoqueRequest.getNroRegistro();
+        final Integer quantidadeRequest = estoqueRequest.getQuantidade();
+
+        ResponseEntity<Object> quantidadeResponse = estoqueRepoService.quantidadePositiva(
+                quantidadeRequest);
+        if(! quantidadeResponse.getStatusCode().equals(HttpStatus.OK))
+            return quantidadeResponse;
+
+        List<EstoqueResponse> estoqueResponse = estoqueRepoService.GetAllByCnpj(cnpjRequest);
+        EstoqueAlteracaoResponse estoqueAlteracaoResponse =
+                estoqueRepoService.GetByCnpjAndRegistro(cnpjRequest, nroRegistroRequest);
+
+        if(estoqueAlteracaoResponse.getCnpj() == null)
+            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "CNPJ não existente!");
+
+        if(estoqueAlteracaoResponse.getNroRegistro() == null)
+            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "Número de Registro não existente!");
+
+        if(estoqueAlteracaoResponse.getQuantidade() == null && estoqueAlteracaoResponse.getDataAtualizacao() == null) {
+            EstoqueAlteracaoResponse estouqeCriado = estoqueRepoService.Save(
+                    mapper.map(estoqueRequest, EstoqueAlteracaoResponse.class)
+            );
+            return ResponseEntity.ok(estouqeCriado);
+        };
+
+        EstoqueAlteracaoResponse estoqueAtualizado = estoqueRepoService.aumentarEstoque(
+                estoqueAlteracaoResponse, quantidadeRequest);
+        EstoqueAlteracaoResponse estoqueSalvo = estoqueRepoService.Save(estoqueAtualizado);
+        return ResponseEntity.ok(estoqueSalvo);
+    };
 }
