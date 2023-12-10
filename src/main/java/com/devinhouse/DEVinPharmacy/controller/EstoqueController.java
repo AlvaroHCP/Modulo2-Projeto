@@ -31,7 +31,7 @@ public class EstoqueController {
     };
 
     @PostMapping
-    public ResponseEntity<?> estoqueAquisicao(@RequestBody @Valid @NotNull
+    public ResponseEntity<Object> estoqueAquisicao(@RequestBody @Valid @NotNull
                                               EstoqueRequest estoqueRequest){
         final Long cnpjRequest = estoqueRequest.getCnpj();
         final Integer nroRegistroRequest = estoqueRequest.getNroRegistro();
@@ -107,11 +107,17 @@ public class EstoqueController {
                 trocaRequest.getNroRegistro(),
                 trocaRequest.getQuantidade());
 
-        Object deletado = estoqueDelecao(estoqueOrigem).getBody();
+        ResponseEntity<Object> deletado = estoqueDelecao(estoqueOrigem);
+        if(deletado.getStatusCode().value() != HttpStatus.OK.value())
+            return deletado;
+        Object responseDeletado = deletado.getBody();
 
-        Object adicionado = estoqueAquisicao(estoqueDestino).getBody();
+        ResponseEntity<Object> adicionado = estoqueAquisicao(estoqueDestino);
+        if(adicionado.getStatusCode().value() != HttpStatus.OK.value())
+            return adicionado;
+//        Object responseAdicionado = adicionado.getBody();
 
-        return ResponseEntity.ok(List.of(trocaRequest, deletado, adicionado));
+        return ResponseEntity.ok(List.of(trocaRequest, deletado));
 //        return ResponseEntity.ok("PUT request received!");
     };
 }
