@@ -120,13 +120,12 @@ public class EstoqueController {
         ResponseEntity<Object> deletado = estoqueDelecao(estoqueOrigem);
         if(deletado.getStatusCode().value() != HttpStatus.OK.value())
             return deletado;
-        Object responseDeletado = deletado.getBody();
+        EstoqueAlteracaoResponse responseDeletado = mapper.map(deletado.getBody(), EstoqueAlteracaoResponse.class);
 
         ResponseEntity<Object> adicionado = estoqueAquisicao(estoqueDestino);
         if(adicionado.getStatusCode().value() != HttpStatus.OK.value())
             return adicionado;
-
-        Object responseAdicionado = adicionado.getBody();
+        EstoqueAlteracaoResponse responseAdicionado = mapper.map(adicionado.getBody(), EstoqueAlteracaoResponse.class);
 
 
 

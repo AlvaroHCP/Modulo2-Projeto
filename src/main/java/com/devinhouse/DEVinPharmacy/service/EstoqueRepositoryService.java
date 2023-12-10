@@ -1,9 +1,7 @@
 package com.devinhouse.DEVinPharmacy.service;
 
 import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
-import com.devinhouse.DEVinPharmacy.dto.EstoqueAlteracaoResponse;
-import com.devinhouse.DEVinPharmacy.dto.EstoqueRequest;
-import com.devinhouse.DEVinPharmacy.dto.EstoqueResponse;
+import com.devinhouse.DEVinPharmacy.dto.*;
 import com.devinhouse.DEVinPharmacy.model.Estoque;
 import com.devinhouse.DEVinPharmacy.repository.EstoqueRepository;
 import org.modelmapper.ModelMapper;
@@ -159,5 +157,12 @@ public class EstoqueRepositoryService {
         return ResponseEntity.ok().build();
     };
 
-
+    public EstoqueTrocaResponse trocaResponse(EstoqueTrocaRequest trocaRequest,
+                                              EstoqueAlteracaoResponse responseDeletado,
+                                              EstoqueAlteracaoResponse responseAdicionado){
+        EstoqueTrocaResponse trocaResponse = mapper.map(trocaRequest, EstoqueTrocaResponse.class);
+        trocaResponse.setQuantidadeOrigem(responseDeletado.getQuantidade());
+        trocaResponse.setQuantidadeDestino(responseAdicionado.getQuantidade());
+        return trocaResponse;
+    };
 }
