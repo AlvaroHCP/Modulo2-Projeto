@@ -1,5 +1,6 @@
 package com.devinhouse.DEVinPharmacy.controller;
 
+import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueAquisicaoResponse;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueRequest;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueResponse;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -32,17 +32,31 @@ public class EstoqueController {
     @PostMapping
     public ResponseEntity<?> estoqueAquisicao(@RequestBody @Valid @NotNull
                                               EstoqueRequest estoqueRequest){
+        final Long cnpjRequest = estoqueRequest.getCnpj();
+        final Integer nroRegistroRequest = estoqueRequest.getNroRegistro();
+        final Integer quantidadeRequest = estoqueRequest.getQuantidade();
         //FIXME: retornar erro com mensagem pra os RN01, RN02, e RN03
         //TODO: Caso não hava cnpj e nroRegistro, criar o registro em Estoque
-        if(estoqueRequest.getQuantidade() < 1)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Quantidade deve ser maior que zero e inteiro!");
+        if(quantidadeRequest < 1)
+            return MyHttpResponse.statusBody(HttpStatus.OK,
+                    "A Quantidade deve ser um número inteiro maior que zero!");
+        List<EstoqueResponse> estoqueResponse = estoqueRepoService.GetAllByCnpj(cnpjRequest);
         EstoqueAquisicaoResponse estoqueAquisicaoResponse =
-                estoqueRepoService.GetAllByCnpjAndRegistro(
-                        estoqueRequest.getCnpj(),estoqueRequest.getNroRegistro());
+                estoqueRepoService.GetByCnpjAndRegistro(cnpjRequest, nroRegistroRequest);
+
+        if(estoqueAquisicaoResponse.getCnpj() == null && estoqueAquisicaoResponse.getNroRegistro() == null) {
+
+            return MyHttpResponse.statusBody(HttpStatus.OK, "Devo incluir esse par no banco de dados!");
+        };
+
         if(estoqueAquisicaoResponse.getCnpj() == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CNPJ ou Número de Registro não existentes!");
+            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "CNPJ não existentes!");
+
+        if(estoqueAquisicaoResponse.getNroRegistro() == null)
+            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "Número de Registro não existentes!");
+
         EstoqueAquisicaoResponse estoqueAtualizado = estoqueRepoService.aumentarEstoque(
-                estoqueAquisicaoResponse, estoqueRequest.getQuantidade());
+                estoqueAquisicaoResponse, quantidadeRequest);
         EstoqueAquisicaoResponse estoqueSalvo = estoqueRepoService.Save(estoqueAtualizado);
         return ResponseEntity.ok(estoqueSalvo);
     };

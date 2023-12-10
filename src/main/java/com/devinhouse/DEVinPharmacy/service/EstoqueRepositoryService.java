@@ -24,10 +24,19 @@ public class EstoqueRepositoryService {
     public List<Estoque> GetAll(){
         return estoqueRepo.findAll();
     };
-    public List<EstoqueResponse> GetAllByCnpj(Long cnpj){
-        List<Estoque> estoqueTotal = estoqueRepo.findAll()
+
+    public List<Estoque> GetEstoqueByCnpj(Long cnpj){
+        return estoqueRepo.findAll()
                 .stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
-        List<EstoqueResponse> estoqueResponse = estoqueTotal.stream().map(item ->
+    };
+
+    public List<Estoque> GetEstoqueByNroRegistro(Integer nroRegistro){
+        return estoqueRepo.findAll()
+                .stream().filter(item -> item.getNroRegistro().equals(nroRegistro)).toList();
+    };
+
+    public List<EstoqueResponse> GetAllByCnpj(Long cnpj){
+        List<EstoqueResponse> estoqueResponse = GetEstoqueByCnpj(cnpj).stream().map(item ->
             mapper.map(item, EstoqueResponse.class)
         ).toList();
 
@@ -39,18 +48,26 @@ public class EstoqueRepositoryService {
         return estoqueResponse;
     };
 
-    public EstoqueAquisicaoResponse GetAllByCnpjAndRegistro(Long cnpj, Integer nroRegistro){
-        List<Estoque> estoqueTotal = estoqueRepo.findAll()
-                .stream().filter(item -> item.getCnpj().equals(cnpj))
-                .filter(item -> item.getNroRegistro().equals(nroRegistro)).toList();
-        List<EstoqueAquisicaoResponse> estoqueResponse = estoqueTotal.stream().map(item ->
-            mapper.map(item, EstoqueAquisicaoResponse.class)
-        ).toList();
+    public EstoqueAquisicaoResponse GetByCnpjAndRegistro(Long cnpj, Integer nroRegistro){
+        EstoqueAquisicaoResponse responseCnpjNroRegistro = new EstoqueAquisicaoResponse();
+        List<Estoque> estoqueCnpj = GetEstoqueByCnpj(cnpj);
+        List<Estoque> estoqueNroRegistro = GetEstoqueByNroRegistro(nroRegistro);
+        if(estoqueCnpj.isEmpty()){
+            if(estoqueNroRegistro.isEmpty())
+                return responseCnpjNroRegistro;
+            responseCnpjNroRegistro.setNroRegistro(nroRegistro);
+            return responseCnpjNroRegistro;
+        }
+        responseCnpjNroRegistro.setCnpj(cnpj);
+        if(estoqueNroRegistro.isEmpty())
+            return responseCnpjNroRegistro;
+        Estoque estoqueCnpjNroRegistro = estoqueCnpj.stream().filter(item ->
+                item.getNroRegistro().equals(nroRegistro)).toList().get(0);
 
-        if(estoqueResponse.isEmpty())
-            return new EstoqueAquisicaoResponse();
+        EstoqueAquisicaoResponse estoqueResponse = mapper.map(
+                estoqueCnpjNroRegistro, EstoqueAquisicaoResponse.class);
 
-        return estoqueResponse.get(0);
+        return estoqueResponse;
     };
 
     public Estoque Get(Long cnpj) {
