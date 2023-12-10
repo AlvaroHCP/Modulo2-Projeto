@@ -4,6 +4,7 @@ import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueAlteracaoResponse;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueRequest;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueResponse;
+import com.devinhouse.DEVinPharmacy.dto.EstoqueTrocaRequest;
 import com.devinhouse.DEVinPharmacy.service.EstoqueRepositoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -91,5 +92,26 @@ public class EstoqueController {
                 estoqueAlteracaoResponse, quantidadeRequest);
 
         return ResponseEntity.ok(estoqueAtualizado);
+    };
+
+    @PutMapping
+    public ResponseEntity<Object> estoqueTroca(@RequestBody @Valid @NotNull
+                                               EstoqueTrocaRequest trocaRequest){
+
+        EstoqueRequest estoqueOrigem = new EstoqueRequest(
+                trocaRequest.getCnpjOrigem(),
+                trocaRequest.getNroRegistro(),
+                trocaRequest.getQuantidade());
+        EstoqueRequest estoqueDestino = new EstoqueRequest(
+                trocaRequest.getCnpjDestino(),
+                trocaRequest.getNroRegistro(),
+                trocaRequest.getQuantidade());
+
+        Object deletado = estoqueDelecao(estoqueOrigem).getBody();
+
+        Object adicionado = estoqueAquisicao(estoqueDestino).getBody();
+
+        return ResponseEntity.ok(List.of(trocaRequest, deletado, adicionado));
+//        return ResponseEntity.ok("PUT request received!");
     };
 }
