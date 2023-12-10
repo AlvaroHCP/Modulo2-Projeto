@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +32,18 @@ public class EstoqueController {
     @PostMapping
     public ResponseEntity<?> estoqueAquisicao(@RequestBody @Valid @NotNull
                                               EstoqueRequest estoqueRequest){
-
-        return ResponseEntity.ok(new EstoqueAquisicaoResponse(estoqueRequest.getCnpj(),estoqueRequest.getNroRegistro(),estoqueRequest.getQuantidade(), LocalDateTime.now()));
-//        return ResponseEntity.ok(estoqueRequest);
+        //FIXME: retornar erro com mensagem pra os RN01, RN02, e RN03
+        //TODO: Caso não hava cnpj e nroRegistro, criar o registro em Estoque
+        if(estoqueRequest.getNroRegistro() < 1)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Número de Registro deve ser maior que zero e inteiro!");
+        EstoqueAquisicaoResponse estoqueAquisicaoResponse =
+                estoqueRepoService.GetAllByCnpjAndRegistro(
+                        estoqueRequest.getCnpj(),estoqueRequest.getNroRegistro());
+        if(estoqueAquisicaoResponse.getCnpj() == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CNPJ ou Número de Registro não existentes!");
+        EstoqueAquisicaoResponse estoqueAtualizado = estoqueRepoService.aumentarEstoque(
+                estoqueAquisicaoResponse, estoqueRequest.getQuantidade());
+        EstoqueAquisicaoResponse estoqueSalvo = estoqueRepoService.Save(estoqueAtualizado);
+        return ResponseEntity.ok(estoqueSalvo);
     };
 }
