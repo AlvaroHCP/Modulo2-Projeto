@@ -2,6 +2,7 @@ package com.devinhouse.DEVinPharmacy.service;
 
 import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueAlteracaoResponse;
+import com.devinhouse.DEVinPharmacy.dto.EstoqueRequest;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueResponse;
 import com.devinhouse.DEVinPharmacy.model.Estoque;
 import com.devinhouse.DEVinPharmacy.repository.EstoqueRepository;
@@ -101,6 +102,10 @@ public class EstoqueRepositoryService {
         EstoqueAlteracaoResponse estoqueAtualizado = mapper.map(estoqueDb, EstoqueAlteracaoResponse.class);
         return estoqueAtualizado;
     };
+    public void Delete(EstoqueAlteracaoResponse estoque){
+        estoque.setDataAtualizacao(LocalDateTime.now());
+        estoqueRepo.delete(mapper.map(estoque, Estoque.class));
+    };
 
     public List<Estoque> SaveAll(List<Estoque> estoque){
         return estoqueRepo.saveAll(estoque);
@@ -108,15 +113,45 @@ public class EstoqueRepositoryService {
 
     public EstoqueAlteracaoResponse aumentarEstoque(EstoqueAlteracaoResponse aquisicao, Integer quantidade){
         aquisicao.setQuantidade(aquisicao.getQuantidade() + quantidade);
+        EstoqueAlteracaoResponse atualizacao = Save(aquisicao);
+        return atualizacao;
+    }
+    public EstoqueAlteracaoResponse diminuirEstoque(EstoqueAlteracaoResponse aquisicao, Integer quantidade){
+        Integer subtracao = aquisicao.getQuantidade() - quantidade;
+        aquisicao.setQuantidade(subtracao);
+
+        if(subtracao == 0) {
+            Delete(aquisicao);
+        } else {
+            EstoqueAlteracaoResponse atualizacao = Save(aquisicao);
+            return atualizacao;
+        }
         return aquisicao;
+    }
+    public ResponseEntity<Object> estoqueResultantePositivo(EstoqueAlteracaoResponse aquisicao, Integer quantidade){
+        int estoqueResultante = aquisicao.getQuantidade() - quantidade;
+        if(estoqueResultante < 0)
+            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "Quantidade a ser vendida é maior que o estoque atual!");
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<Object> quantidadePositiva(Integer quantidade){
         if(quantidade < 1)
             return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST,
                     "A Quantidade deve ser um número inteiro maior que zero!");
-        System.out.println(ResponseEntity.ok().build().getStatusCode());
-        System.out.println(HttpStatus.OK);
+        return ResponseEntity.ok().build();
+    };
+
+    public ResponseEntity<Object> cnpjNroRegistroExistentes(EstoqueRequest request, EstoqueAlteracaoResponse response){
+        if(response.getCnpj() == null)
+            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "CNPJ não existente!");
+
+        if(response.getNroRegistro() == null)
+            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "Número de Registro não existente!");
+
+        if(response.getQuantidade() == null && response.getDataAtualizacao() == null) {
+            return MyHttpResponse.statusBody(HttpStatus.NOT_FOUND, "Número de Registro não encontrado para este Cnpj");
+        };
         return ResponseEntity.ok().build();
     };
 

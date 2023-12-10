@@ -78,22 +78,19 @@ public class EstoqueController {
         EstoqueAlteracaoResponse estoqueAlteracaoResponse =
                 estoqueRepoService.GetByCnpjAndRegistro(cnpjRequest, nroRegistroRequest);
 
-        if(estoqueAlteracaoResponse.getCnpj() == null)
-            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "CNPJ não existente!");
+        ResponseEntity<Object> cnpjNroRegistroResponse = estoqueRepoService.cnpjNroRegistroExistentes(
+                estoqueRequest, estoqueAlteracaoResponse);
+        if(! cnpjNroRegistroResponse.getStatusCode().equals(HttpStatus.OK))
+            return cnpjNroRegistroResponse;
 
-        if(estoqueAlteracaoResponse.getNroRegistro() == null)
-            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "Número de Registro não existente!");
-
-        if(estoqueAlteracaoResponse.getQuantidade() == null && estoqueAlteracaoResponse.getDataAtualizacao() == null) {
-            EstoqueAlteracaoResponse estouqeCriado = estoqueRepoService.Save(
-                    mapper.map(estoqueRequest, EstoqueAlteracaoResponse.class)
-            );
-            return ResponseEntity.ok(estouqeCriado);
-        };
-
-        EstoqueAlteracaoResponse estoqueAtualizado = estoqueRepoService.aumentarEstoque(
+        ResponseEntity<Object> reducaoPositiva = estoqueRepoService.estoqueResultantePositivo(
                 estoqueAlteracaoResponse, quantidadeRequest);
-        EstoqueAlteracaoResponse estoqueSalvo = estoqueRepoService.Save(estoqueAtualizado);
-        return ResponseEntity.ok(estoqueSalvo);
+        if(! reducaoPositiva.getStatusCode().equals(HttpStatus.OK)) {
+            return reducaoPositiva;
+        }
+        EstoqueAlteracaoResponse estoqueAtualizado = estoqueRepoService.diminuirEstoque(
+                estoqueAlteracaoResponse, quantidadeRequest);
+
+        return ResponseEntity.ok(estoqueAtualizado);
     };
 }
