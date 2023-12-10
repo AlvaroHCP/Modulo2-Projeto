@@ -36,30 +36,29 @@ public class EstoqueController {
         final Integer nroRegistroRequest = estoqueRequest.getNroRegistro();
         final Integer quantidadeRequest = estoqueRequest.getQuantidade();
 
-        if(quantidadeRequest < 1)
-            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST,
-                    "A Quantidade deve ser um número inteiro maior que zero!");
+        ResponseEntity<Object> quantidadeResponse = estoqueRepoService.quantidadePositiva(
+                quantidadeRequest);
+        if(! quantidadeResponse.getStatusCode().equals(HttpStatus.OK))
+            return quantidadeResponse;
+
         List<EstoqueResponse> estoqueResponse = estoqueRepoService.GetAllByCnpj(cnpjRequest);
         EstoqueAlteracaoResponse estoqueAlteracaoResponse =
                 estoqueRepoService.GetByCnpjAndRegistro(cnpjRequest, nroRegistroRequest);
 
-        if(estoqueAlteracaoResponse.getCnpj() == null)
-            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "CNPJ não existente!");
-
-        if(estoqueAlteracaoResponse.getNroRegistro() == null)
-            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "Número de Registro não existente!");
-
-        if(estoqueAlteracaoResponse.getQuantidade() == null && estoqueAlteracaoResponse.getDataAtualizacao() == null) {
-            EstoqueAlteracaoResponse estouqeCriado = estoqueRepoService.Save(
+        ResponseEntity<Object> cnpjNroRegistroResponse = estoqueRepoService.cnpjNroRegistroExistentes(
+                estoqueRequest, estoqueAlteracaoResponse);
+        if(cnpjNroRegistroResponse.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
+            EstoqueAlteracaoResponse estoqueCriado = estoqueRepoService.Save(
                     mapper.map(estoqueRequest, EstoqueAlteracaoResponse.class)
             );
-            return ResponseEntity.ok(estouqeCriado);
+            return ResponseEntity.ok(estoqueCriado);
         };
+        if(! cnpjNroRegistroResponse.getStatusCode().equals(HttpStatus.OK))
+            return cnpjNroRegistroResponse;
 
         EstoqueAlteracaoResponse estoqueAtualizado = estoqueRepoService.aumentarEstoque(
                 estoqueAlteracaoResponse, quantidadeRequest);
-        EstoqueAlteracaoResponse estoqueSalvo = estoqueRepoService.Save(estoqueAtualizado);
-        return ResponseEntity.ok(estoqueSalvo);
+        return ResponseEntity.ok(estoqueAtualizado);
     };
 
     @DeleteMapping
