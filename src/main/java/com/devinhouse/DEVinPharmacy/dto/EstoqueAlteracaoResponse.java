@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EstoqueAquisicaoResponse {
+public class EstoqueAlteracaoResponse {
     private Long cnpj;
     private Integer nroRegistro;
     private Integer quantidade;

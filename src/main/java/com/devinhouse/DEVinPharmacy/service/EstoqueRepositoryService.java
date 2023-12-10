@@ -1,6 +1,6 @@
 package com.devinhouse.DEVinPharmacy.service;
 
-import com.devinhouse.DEVinPharmacy.dto.EstoqueAquisicaoResponse;
+import com.devinhouse.DEVinPharmacy.dto.EstoqueAlteracaoResponse;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueResponse;
 import com.devinhouse.DEVinPharmacy.model.Estoque;
 import com.devinhouse.DEVinPharmacy.repository.EstoqueRepository;
@@ -48,8 +48,8 @@ public class EstoqueRepositoryService {
         return estoqueResponse;
     };
 
-    public EstoqueAquisicaoResponse GetByCnpjAndRegistro(Long cnpj, Integer nroRegistro){
-        EstoqueAquisicaoResponse responseCnpjNroRegistro = new EstoqueAquisicaoResponse();
+    public EstoqueAlteracaoResponse GetByCnpjAndRegistro(Long cnpj, Integer nroRegistro){
+        EstoqueAlteracaoResponse responseCnpjNroRegistro = new EstoqueAlteracaoResponse();
         List<Estoque> estoqueCnpj = GetEstoqueByCnpj(cnpj);
         if(estoqueCnpj.isEmpty()) {
             responseCnpjNroRegistro.setNroRegistro(nroRegistro);
@@ -70,8 +70,8 @@ public class EstoqueRepositoryService {
             return responseCnpjNroRegistro;
         }
 
-        EstoqueAquisicaoResponse estoqueResponse = mapper.map(
-                estoqueCnpjNroRegistro.get(0), EstoqueAquisicaoResponse.class);
+        EstoqueAlteracaoResponse estoqueResponse = mapper.map(
+                estoqueCnpjNroRegistro.get(0), EstoqueAlteracaoResponse.class);
 
         return estoqueResponse;
     };
@@ -92,10 +92,10 @@ public class EstoqueRepositoryService {
         estoque.setDataAtualizacao(LocalDateTime.now());
         return estoqueRepo.save(estoque);
     };
-    public EstoqueAquisicaoResponse Save(EstoqueAquisicaoResponse estoque){
+    public EstoqueAlteracaoResponse Save(EstoqueAlteracaoResponse estoque){
         estoque.setDataAtualizacao(LocalDateTime.now());
         Estoque estoqueDb = estoqueRepo.save(mapper.map(estoque, Estoque.class));
-        EstoqueAquisicaoResponse estoqueAtualizado = mapper.map(estoqueDb, EstoqueAquisicaoResponse.class);
+        EstoqueAlteracaoResponse estoqueAtualizado = mapper.map(estoqueDb, EstoqueAlteracaoResponse.class);
         return estoqueAtualizado;
     };
 
@@ -103,7 +103,7 @@ public class EstoqueRepositoryService {
         return estoqueRepo.saveAll(estoque);
     };
 
-    public EstoqueAquisicaoResponse aumentarEstoque(EstoqueAquisicaoResponse aquisicao, Integer quantidade){
+    public EstoqueAlteracaoResponse aumentarEstoque(EstoqueAlteracaoResponse aquisicao, Integer quantidade){
         aquisicao.setQuantidade(aquisicao.getQuantidade() + quantidade);
         return aquisicao;
     }

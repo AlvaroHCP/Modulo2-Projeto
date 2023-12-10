@@ -1,7 +1,7 @@
 package com.devinhouse.DEVinPharmacy.controller;
 
 import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
-import com.devinhouse.DEVinPharmacy.dto.EstoqueAquisicaoResponse;
+import com.devinhouse.DEVinPharmacy.dto.EstoqueAlteracaoResponse;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueRequest;
 import com.devinhouse.DEVinPharmacy.dto.EstoqueResponse;
 import com.devinhouse.DEVinPharmacy.service.EstoqueRepositoryService;
@@ -40,25 +40,25 @@ public class EstoqueController {
             return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST,
                     "A Quantidade deve ser um número inteiro maior que zero!");
         List<EstoqueResponse> estoqueResponse = estoqueRepoService.GetAllByCnpj(cnpjRequest);
-        EstoqueAquisicaoResponse estoqueAquisicaoResponse =
+        EstoqueAlteracaoResponse estoqueAlteracaoResponse =
                 estoqueRepoService.GetByCnpjAndRegistro(cnpjRequest, nroRegistroRequest);
 
-        if(estoqueAquisicaoResponse.getCnpj() == null)
+        if(estoqueAlteracaoResponse.getCnpj() == null)
             return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "CNPJ não existente!");
 
-        if(estoqueAquisicaoResponse.getNroRegistro() == null)
+        if(estoqueAlteracaoResponse.getNroRegistro() == null)
             return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "Número de Registro não existente!");
 
-        if(estoqueAquisicaoResponse.getQuantidade() == null && estoqueAquisicaoResponse.getDataAtualizacao() == null) {
-            EstoqueAquisicaoResponse estouqeCriado = estoqueRepoService.Save(
-                    mapper.map(estoqueRequest, EstoqueAquisicaoResponse.class)
+        if(estoqueAlteracaoResponse.getQuantidade() == null && estoqueAlteracaoResponse.getDataAtualizacao() == null) {
+            EstoqueAlteracaoResponse estouqeCriado = estoqueRepoService.Save(
+                    mapper.map(estoqueRequest, EstoqueAlteracaoResponse.class)
             );
             return ResponseEntity.ok(estouqeCriado);
         };
 
-        EstoqueAquisicaoResponse estoqueAtualizado = estoqueRepoService.aumentarEstoque(
-                estoqueAquisicaoResponse, quantidadeRequest);
-        EstoqueAquisicaoResponse estoqueSalvo = estoqueRepoService.Save(estoqueAtualizado);
+        EstoqueAlteracaoResponse estoqueAtualizado = estoqueRepoService.aumentarEstoque(
+                estoqueAlteracaoResponse, quantidadeRequest);
+        EstoqueAlteracaoResponse estoqueSalvo = estoqueRepoService.Save(estoqueAtualizado);
         return ResponseEntity.ok(estoqueSalvo);
     };
 }
