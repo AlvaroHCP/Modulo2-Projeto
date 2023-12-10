@@ -98,6 +98,16 @@ public class EstoqueController {
     public ResponseEntity<Object> estoqueTroca(@RequestBody @Valid @NotNull
                                                EstoqueTrocaRequest trocaRequest){
 
+        List<EstoqueAlteracaoResponse> existeCnpjOrigem = estoqueRepoService.GetByCnpj(
+                trocaRequest.getCnpjOrigem());
+        if(existeCnpjOrigem.isEmpty())
+            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "CNPJ de Origem não existente!");
+
+        List<EstoqueAlteracaoResponse> existeCnpjDestino = estoqueRepoService.GetByCnpj(
+                trocaRequest.getCnpjDestino());
+        if(existeCnpjDestino.isEmpty())
+            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "CNPJ de Destino não existente!");
+
         EstoqueRequest estoqueOrigem = new EstoqueRequest(
                 trocaRequest.getCnpjOrigem(),
                 trocaRequest.getNroRegistro(),
@@ -115,9 +125,11 @@ public class EstoqueController {
         ResponseEntity<Object> adicionado = estoqueAquisicao(estoqueDestino);
         if(adicionado.getStatusCode().value() != HttpStatus.OK.value())
             return adicionado;
-//        Object responseAdicionado = adicionado.getBody();
 
-        return ResponseEntity.ok(List.of(trocaRequest, deletado));
-//        return ResponseEntity.ok("PUT request received!");
+        Object responseAdicionado = adicionado.getBody();
+
+
+
+        return ResponseEntity.ok(List.of(responseDeletado, responseAdicionado));
     };
 }

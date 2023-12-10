@@ -33,6 +33,11 @@ public class EstoqueRepositoryService {
         return estoqueRepo.findAll()
                 .stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
     };
+    public List<EstoqueAlteracaoResponse> GetByCnpj(Long cnpj){
+        List<Estoque> consulta = estoqueRepo.findAll()
+                .stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
+        return consulta.stream().map(item -> mapper.map(item, EstoqueAlteracaoResponse.class)).toList();
+    };
 
     public List<Estoque> GetEstoqueByNroRegistro(Integer nroRegistro){
         return estoqueRepo.findAll()
@@ -68,7 +73,6 @@ public class EstoqueRepositoryService {
         List<Estoque> estoqueCnpjNroRegistro = estoqueCnpj.stream().filter(item ->
                 item.getNroRegistro().equals(nroRegistro)).toList();
         if(estoqueCnpjNroRegistro.isEmpty()) {
-            //TODO: criar o par
             responseCnpjNroRegistro.setCnpj(cnpj);
             responseCnpjNroRegistro.setNroRegistro(nroRegistro);
             return responseCnpjNroRegistro;
