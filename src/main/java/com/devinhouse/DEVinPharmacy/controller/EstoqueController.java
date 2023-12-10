@@ -34,8 +34,8 @@ public class EstoqueController {
                                               EstoqueRequest estoqueRequest){
         //FIXME: retornar erro com mensagem pra os RN01, RN02, e RN03
         //TODO: Caso não hava cnpj e nroRegistro, criar o registro em Estoque
-        if(estoqueRequest.getNroRegistro() < 1)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Número de Registro deve ser maior que zero e inteiro!");
+        if(estoqueRequest.getQuantidade() < 1)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Quantidade deve ser maior que zero e inteiro!");
         EstoqueAquisicaoResponse estoqueAquisicaoResponse =
                 estoqueRepoService.GetAllByCnpjAndRegistro(
                         estoqueRequest.getCnpj(),estoqueRequest.getNroRegistro());
