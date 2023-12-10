@@ -1,10 +1,7 @@
 package com.devinhouse.DEVinPharmacy.controller;
 
 import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
-import com.devinhouse.DEVinPharmacy.dto.EstoqueAlteracaoResponse;
-import com.devinhouse.DEVinPharmacy.dto.EstoqueRequest;
-import com.devinhouse.DEVinPharmacy.dto.EstoqueResponse;
-import com.devinhouse.DEVinPharmacy.dto.EstoqueTrocaRequest;
+import com.devinhouse.DEVinPharmacy.dto.*;
 import com.devinhouse.DEVinPharmacy.service.EstoqueRepositoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -127,8 +124,9 @@ public class EstoqueController {
             return adicionado;
         EstoqueAlteracaoResponse responseAdicionado = mapper.map(adicionado.getBody(), EstoqueAlteracaoResponse.class);
 
+        EstoqueTrocaResponse trocaResponse = estoqueRepoService.trocaResponse( trocaRequest,
+                 responseDeletado, responseAdicionado);
 
-
-        return ResponseEntity.ok(List.of(responseDeletado, responseAdicionado));
+        return ResponseEntity.ok(trocaResponse);
     };
 }
