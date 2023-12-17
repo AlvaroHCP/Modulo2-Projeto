@@ -1,6 +1,5 @@
 package com.devinhouse.DEVinPharmacy.controller;
 
-import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.model.Estoque;
 import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.model.Medicamento;
@@ -31,7 +30,7 @@ public class InicializacaoController {
     EstoqueInicializacaoService estoqueInicializacaoService;
 
     @PostMapping
-    public ResponseEntity<?> inicialize() {
+    public ResponseEntity<Object> inicialize() {
 
         if (farmaciaRepoService.GetAll().isEmpty()) {
             List<Farmacia> farmacias = farmaciaInicializacaoService.inicializarDados();
