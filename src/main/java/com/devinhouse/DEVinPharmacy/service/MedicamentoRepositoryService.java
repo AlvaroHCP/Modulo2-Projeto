@@ -1,7 +1,12 @@
 package com.devinhouse.DEVinPharmacy.service;
 
+import com.devinhouse.DEVinPharmacy.dto.MedicamentoRequest;
+import com.devinhouse.DEVinPharmacy.dto.MedicamentoResponse;
+import com.devinhouse.DEVinPharmacy.exception.ApiAlreadyRegisteredException;
+import com.devinhouse.DEVinPharmacy.exception.ApiNotFoundException;
 import com.devinhouse.DEVinPharmacy.model.Medicamento;
 import com.devinhouse.DEVinPharmacy.repository.MedicamentoRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,25 +17,32 @@ public class MedicamentoRepositoryService {
 
     @Autowired
     MedicamentoRepository medicamentoRepo;
+    @Autowired
+    ModelMapper mapper;
 
-    public List<Medicamento> GetAll(){
-        return medicamentoRepo.findAll();
+    public void nroRegistroAlreadyRegistered(Integer nroRegistro){
+        boolean medicamento = medicamentoRepo.existsById(nroRegistro);
+        if(medicamento) {
+            throw new ApiAlreadyRegisteredException(Medicamento.class.getSimpleName(), nroRegistro.toString());
+        }
     };
 
-    public Medicamento Get(Integer registro) {
+    public List<MedicamentoResponse> GetAll(){
+        return medicamentoRepo.findAll().stream().map(item -> mapper.map(item, MedicamentoResponse.class)).toList();
+    };
+
+    public MedicamentoResponse Get(Integer registro) {
         List<Medicamento> medicamentos = medicamentoRepo.findAll()
                 .stream().filter(item -> item.getNroRegistro().equals(registro)).toList();
-        if(medicamentos.isEmpty()) {
-//            throw new NotFoundException(registro, "Registro Não encontrado.");
-            Medicamento medicamento = new Medicamento();
-            return medicamento;
-        }
+        if(medicamentos.isEmpty())
+            throw new ApiNotFoundException(Medicamento.class.getSimpleName(), registro.toString());
 
-        return medicamentos.get(0);
+        return mapper.map(medicamentos.get(0),MedicamentoResponse.class);
     };
 
-    public Medicamento Save(Medicamento medicamento){
-        return medicamentoRepo.save(medicamento);
+    public MedicamentoResponse Save(MedicamentoRequest medicamentoRequest){
+        Medicamento request = mapper.map(medicamentoRequest, Medicamento.class);
+        return mapper.map(medicamentoRepo.save(request), MedicamentoResponse.class);
     };
 
     public List<Medicamento> SaveAll(List<Medicamento> medicamentos){

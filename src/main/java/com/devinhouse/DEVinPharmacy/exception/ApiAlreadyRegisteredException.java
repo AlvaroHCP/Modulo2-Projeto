@@ -13,7 +13,7 @@ public class ApiAlreadyRegisteredException extends RuntimeException {
 
     @Override
     public String toString() {
-        return "Registro já existente para " + nome +
-                " = " + registro +".";
+        return "Registro já existente para '" + nome +
+                "' com Id = '" + registro +"'.";
     }
 }

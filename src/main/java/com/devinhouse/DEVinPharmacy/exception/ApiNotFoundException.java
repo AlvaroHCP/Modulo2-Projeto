@@ -13,7 +13,7 @@ public class ApiNotFoundException extends RuntimeException {
 
     @Override
     public String toString() {
-        return "Registro não encontrado para " + nome +
-                " = " + registro +".";
+        return "Registro não encontrado para '" + nome +
+                "' com Id = '" + registro +"'.";
     }
 }
