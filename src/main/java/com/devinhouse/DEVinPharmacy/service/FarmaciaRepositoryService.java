@@ -21,7 +21,7 @@ public class FarmaciaRepositoryService {
         List<Farmacia> farmacias = farmaciaRepo.findAll()
                 .stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
         if(farmacias.isEmpty()) {
-            throw new ApiNotFoundException(Farmacia.class.getSimpleName(), "Registro Não encontrado.");
+            throw new ApiNotFoundException("Cnpj", cnpj.toString());
 //            Farmacia farmacia = new Farmacia();
 //            farmacia.setCnpj(cnpj);
 //            return farmacia;

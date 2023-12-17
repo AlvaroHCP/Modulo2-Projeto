@@ -38,7 +38,7 @@ public class MedicamentoController {
         Medicamento medicamento = medicamentoRepoService.Get(medicamentoRequest.getNroRegistro());
         if(medicamento.getNroRegistro() != null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ApiNotFoundException(medicamentoRequest.getNroRegistro()+"",
+                    new ApiNotFoundException("nroRegistro",
                             "Este medicamento já existe, ou os seus dados estão inválidos!")
             );
         }

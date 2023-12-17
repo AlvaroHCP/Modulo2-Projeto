@@ -8,15 +8,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiNotFoundException extends RuntimeException {
-    private String codigo;
-
-    private String message;
+    private String nome;
+    private String registro;
 
     @Override
     public String toString() {
-        return "{" +
-                "item=" + codigo +
-                ", message='" + message + '\'' +
-                '}';
+        return "Registro não encontrado para " + nome +
+                " = " + registro +".";
     }
 }

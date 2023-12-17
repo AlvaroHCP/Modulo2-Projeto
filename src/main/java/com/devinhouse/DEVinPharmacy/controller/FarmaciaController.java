@@ -40,7 +40,7 @@ public class FarmaciaController {
             FarmaciaResponse farmaciaResponse = mapper.map(farmacia, FarmaciaResponse.class);
             return MyHttpResponse.farmaciaOk(farmaciaResponse);
         }
-        ApiNotFoundException notFound = new ApiNotFoundException(cnpj+"", "Registro Não encontrado.");
+        ApiNotFoundException notFound = new ApiNotFoundException("Cnpj", cnpj.toString());
 //        FarmaciaResponse farmaciaResponse = mapper.map(notFound, FarmaciaResponse.class);
 //        FarmaciaResponse farmaciaResponse = mapper.map(farmacia, FarmaciaResponse.class);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(notFound);
@@ -53,7 +53,7 @@ public class FarmaciaController {
         Farmacia farmacia = farmaciaRepoService.Get(farmaciaRequest.getCnpj());
         if(farmacia.getCnpj() != null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ApiNotFoundException(farmaciaRequest.getCnpj()+"",
+                    new ApiNotFoundException("cnpj",
                             "Esta farmácia já existe, ou os seus dados estão inválidos!")
             );
         }
