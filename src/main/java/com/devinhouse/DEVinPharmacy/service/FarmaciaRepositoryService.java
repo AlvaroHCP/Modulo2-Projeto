@@ -1,9 +1,11 @@
 package com.devinhouse.DEVinPharmacy.service;
 
+import com.devinhouse.DEVinPharmacy.dto.FarmaciaResponse;
 import com.devinhouse.DEVinPharmacy.exception.ApiAlreadyRegisteredException;
 import com.devinhouse.DEVinPharmacy.exception.ApiNotFoundException;
 import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.repository.FarmaciaRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,14 @@ public class FarmaciaRepositoryService {
 
     @Autowired
     FarmaciaRepository farmaciaRepo;
+    @Autowired
+    ModelMapper mapper;
 
-    public List<Farmacia> GetAll(){
-        return farmaciaRepo.findAll();
+//    public List<Farmacia> GetAll(){
+//        return farmaciaRepo.findAll();
+//    };
+    public List<FarmaciaResponse> GetAll(){
+        return farmaciaRepo.findAll().stream().map(item -> mapper.map(item, FarmaciaResponse.class)).toList();
     };
     public Farmacia Get(Long cnpj) {
         List<Farmacia> farmacias = farmaciaRepo.findAll()

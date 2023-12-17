@@ -25,12 +25,8 @@ public class FarmaciaController {
     ModelMapper mapper;
     @GetMapping
     public ResponseEntity<List<FarmaciaResponse>> farmaciasGet(){
-        List<Farmacia> farmacias = farmaciaRepoService.GetAll();
-//FIXME: Incluir o mapeamento dentro do serviço GetAll
-        List<FarmaciaResponse> farmaciaResponse = farmacias.stream().map(farmacia ->
-                mapper.map(farmacia, FarmaciaResponse.class)
-        ).toList();
-        return MyHttpResponse.farmaciasOk(farmaciaResponse);
+        List<FarmaciaResponse> farmacias = farmaciaRepoService.GetAll();
+        return MyHttpResponse.farmaciasOk(farmacias);
     };
 
     @GetMapping("/{cnpj}")
