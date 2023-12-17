@@ -9,12 +9,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class EstoqueRequest {
     @NotNull(message = "Campo Obrigatório!")
-    @NotEmpty(message = "Campo Obrigatório!")
     private Long cnpj;
     @NotNull(message = "Campo Obrigatório!")
-    @NotEmpty(message = "Campo Obrigatório!")
     private Integer nroRegistro;
     @NotNull(message = "Campo Obrigatório!")
-    @NotEmpty(message = "Campo Obrigatório!")
     private Integer quantidade;
 }

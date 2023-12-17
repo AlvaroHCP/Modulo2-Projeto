@@ -10,23 +10,17 @@ import lombok.Data;
 @Data
 public class MedicamentoRequest {
     @NotNull(message = "Campo Obrigatório!")
-    @NotEmpty(message = "Campo Obrigatório!")
     private Integer nroRegistro;
-    @NotNull(message = "Campo Obrigatório!")
     @NotEmpty(message = "Campo Obrigatório!")
     private String nome;
-    @NotNull(message = "Campo Obrigatório!")
     @NotEmpty(message = "Campo Obrigatório!")
     private String laboratorio;
-    @NotNull(message = "Campo Obrigatório!")
     @NotEmpty(message = "Campo Obrigatório!")
     private String dosagem;
     private String descricao;
     @NotNull(message = "Campo Obrigatório!")
-    @NotEmpty(message = "Campo Obrigatório!")
     private Float preco;
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Campo Obrigatório!")
-    @NotEmpty(message = "Campo Obrigatório!")
     private TipoMedicamento tipo;
 }

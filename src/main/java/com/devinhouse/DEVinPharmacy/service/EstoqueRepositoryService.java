@@ -2,6 +2,7 @@ package com.devinhouse.DEVinPharmacy.service;
 
 import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.dto.*;
+import com.devinhouse.DEVinPharmacy.exception.ApiNotFoundException;
 import com.devinhouse.DEVinPharmacy.model.Estoque;
 import com.devinhouse.DEVinPharmacy.repository.EstoqueRepository;
 import org.modelmapper.ModelMapper;
@@ -85,12 +86,8 @@ public class EstoqueRepositoryService {
     public Estoque Get(Long cnpj) {
         List<Estoque> estoques = estoqueRepo.findAll()
                 .stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
-        if(estoques.isEmpty()) {
-//            throw new NotFoundException(cnpj, "Registro Não encontrado.");
-            Estoque estoque = new Estoque();
-            return estoque;
-        }
-
+        if(estoques.isEmpty())
+            throw new ApiNotFoundException(Estoque.class.getSimpleName(), cnpj.toString());
         return estoques.get(0);
     };
 
