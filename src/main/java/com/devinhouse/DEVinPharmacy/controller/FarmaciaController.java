@@ -21,8 +21,7 @@ import java.util.List;
 public class FarmaciaController {
     @Autowired
     FarmaciaRepositoryService farmaciaRepoService;
-    @Autowired
-    ModelMapper mapper;
+
     @GetMapping
     public ResponseEntity<List<FarmaciaResponse>> farmaciasGet(){
         List<FarmaciaResponse> farmacias = farmaciaRepoService.GetAll();

@@ -21,9 +21,6 @@ public class FarmaciaRepositoryService {
     @Autowired
     ModelMapper mapper;
 
-//    public List<Farmacia> GetAll(){
-//        return farmaciaRepo.findAll();
-//    };
     public List<FarmaciaResponse> GetAll(){
         return farmaciaRepo.findAll().stream().map(item -> mapper.map(item, FarmaciaResponse.class)).toList();
     };
@@ -37,8 +34,8 @@ public class FarmaciaRepositoryService {
     };
 
     public void cnpjAlreadyRegistered(Long cnpj){
-        Optional<Farmacia> farmacia = farmaciaRepo.findById(cnpj);
-        if(farmacia.isPresent()) {
+        boolean farmacia = farmaciaRepo.existsById(cnpj);
+        if(farmacia) {
             throw new ApiAlreadyRegisteredException("Cnpj", cnpj.toString());
         }
     };
