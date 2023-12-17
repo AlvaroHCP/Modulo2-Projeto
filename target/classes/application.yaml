@@ -13,6 +13,9 @@ spring:
     init:
       mode: always
 
+  jackson:
+    default-property-inclusion: NON_NULL
+
 server:
   port: 8080
 #  port: 7666
@@ -23,4 +26,4 @@ springdoc:
     path: /docs.html
 
 #  servlet:
-#    context-path=/DEVinPharmacy:
+#    context-path: /api/v1:
