@@ -34,10 +34,7 @@ public class EstoqueController {
         final Integer nroRegistroRequest = estoqueRequest.getNroRegistro();
         final Integer quantidadeRequest = estoqueRequest.getQuantidade();
 
-        ResponseEntity<Object> quantidadeResponse = estoqueRepoService.quantidadePositiva(
-                quantidadeRequest);
-        if(! quantidadeResponse.getStatusCode().equals(HttpStatus.OK))
-            return quantidadeResponse;
+        estoqueRepoService.quantidadePositiva(quantidadeRequest);
 
         List<EstoqueResponse> estoqueResponse = estoqueRepoService.GetAllByCnpj(cnpjRequest);
         EstoqueAlteracaoResponse estoqueAlteracaoResponse =
@@ -66,10 +63,10 @@ public class EstoqueController {
         final Integer nroRegistroRequest = estoqueRequest.getNroRegistro();
         final Integer quantidadeRequest = estoqueRequest.getQuantidade();
 
-        ResponseEntity<Object> quantidadeResponse = estoqueRepoService.quantidadePositiva(
+        estoqueRepoService.quantidadePositiva(
                 quantidadeRequest);
-        if(! quantidadeResponse.getStatusCode().equals(HttpStatus.OK))
-            return quantidadeResponse;
+//        if(! quantidadeResponse.getStatusCode().equals(HttpStatus.OK))
+//            return quantidadeResponse;
 
         List<EstoqueResponse> estoqueResponse = estoqueRepoService.GetAllByCnpj(cnpjRequest);
         EstoqueAlteracaoResponse estoqueAlteracaoResponse =

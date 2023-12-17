@@ -2,6 +2,7 @@ package com.devinhouse.DEVinPharmacy.service;
 
 import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.dto.*;
+import com.devinhouse.DEVinPharmacy.exception.ApiBadRequestException;
 import com.devinhouse.DEVinPharmacy.exception.ApiNotFoundException;
 import com.devinhouse.DEVinPharmacy.model.Estoque;
 import com.devinhouse.DEVinPharmacy.repository.EstoqueRepository;
@@ -134,11 +135,9 @@ public class EstoqueRepositoryService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Object> quantidadePositiva(Integer quantidade){
+    public void quantidadePositiva(Integer quantidade){
         if(quantidade < 1)
-            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST,
-                    "A Quantidade deve ser um número inteiro maior que zero!");
-        return ResponseEntity.ok().build();
+            throw new ApiBadRequestException("quantidade", "deve ser um número inteiro maior que zero!");
     };
 
     public ResponseEntity<Object> cnpjNroRegistroExistentes(EstoqueRequest request, EstoqueAlteracaoResponse response){

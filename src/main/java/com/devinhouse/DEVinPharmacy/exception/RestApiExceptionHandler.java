@@ -24,6 +24,14 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         ApiErrorResponse error = new ApiErrorResponse(exception.getClass().getSimpleName(), exception.toString());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     };
+
+    @ExceptionHandler(ApiBadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleApiBadRequestException(ApiBadRequestException exception){
+        ApiErrorResponse error = new ApiErrorResponse(exception.getClass().getSimpleName(), exception.toString());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    };
+
     @ExceptionHandler(ApiAlreadyRegisteredException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleApiAlreadyRegisteredException(ApiAlreadyRegisteredException exception){
