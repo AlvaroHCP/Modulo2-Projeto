@@ -14,7 +14,13 @@ spring:
       mode: always
 
 server:
-  port: 7666
+  port: 8080
+#  port: 7666
+
+# swagger-path
+springdoc:
+  swagger-ui:
+    path: /docs.html
 
 #  servlet:
 #    context-path=/DEVinPharmacy:
