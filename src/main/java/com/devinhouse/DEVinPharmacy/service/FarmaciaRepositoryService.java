@@ -26,13 +26,13 @@ public class FarmaciaRepositoryService {
     public List<FarmaciaResponse> GetAll(){
         return farmaciaRepo.findAll().stream().map(item -> mapper.map(item, FarmaciaResponse.class)).toList();
     };
-    public Farmacia Get(Long cnpj) {
+    public FarmaciaResponse Get(Long cnpj) {
         List<Farmacia> farmacias = farmaciaRepo.findAll()
                 .stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
         if(farmacias.isEmpty()) {
             throw new ApiNotFoundException("Cnpj", cnpj.toString());
         }
-        return farmacias.get(0);
+        return mapper.map(farmacias.get(0), FarmaciaResponse.class);
     };
 
     public void cnpjAlreadyRegistered(Long cnpj){

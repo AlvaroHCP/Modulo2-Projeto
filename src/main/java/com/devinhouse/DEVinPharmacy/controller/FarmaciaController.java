@@ -30,9 +30,8 @@ public class FarmaciaController {
     };
 
     @GetMapping("/{cnpj}")
-    public ResponseEntity<Farmacia> farmaciaByCNPJ(@PathVariable Long cnpj){
-        Farmacia farmacia = farmaciaRepoService.Get(cnpj);
-
+    public ResponseEntity<FarmaciaResponse> farmaciaByCNPJ(@PathVariable Long cnpj){
+        FarmaciaResponse farmacia = farmaciaRepoService.Get(cnpj);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(farmacia);
     };
 
