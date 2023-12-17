@@ -26,7 +26,7 @@ public class FarmaciaController {
     @GetMapping
     public ResponseEntity<List<FarmaciaResponse>> farmaciasGet(){
         List<Farmacia> farmacias = farmaciaRepoService.GetAll();
-
+//FIXME: Incluir o mapeamento dentro do serviço GetAll
         List<FarmaciaResponse> farmaciaResponse = farmacias.stream().map(farmacia ->
                 mapper.map(farmacia, FarmaciaResponse.class)
         ).toList();
@@ -34,29 +34,18 @@ public class FarmaciaController {
     };
 
     @GetMapping("/{cnpj}")
-    public ResponseEntity<?> farmaciaByCNPJ(@PathVariable Long cnpj){
+    public ResponseEntity<Farmacia> farmaciaByCNPJ(@PathVariable Long cnpj){
         Farmacia farmacia = farmaciaRepoService.Get(cnpj);
-        if(farmacia.getCnpj() != null) {
-            FarmaciaResponse farmaciaResponse = mapper.map(farmacia, FarmaciaResponse.class);
-            return MyHttpResponse.farmaciaOk(farmaciaResponse);
-        }
-        ApiNotFoundException notFound = new ApiNotFoundException("Cnpj", cnpj.toString());
-//        FarmaciaResponse farmaciaResponse = mapper.map(notFound, FarmaciaResponse.class);
-//        FarmaciaResponse farmaciaResponse = mapper.map(farmacia, FarmaciaResponse.class);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(notFound);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(farmacia);
     };
 
     @PostMapping
-    public ResponseEntity<?> inserirFarmacia(
+    public ResponseEntity<FarmaciaResponse> inserirFarmacia(
             @RequestBody @Valid @NotNull FarmaciaRequest farmaciaRequest){
+        Long cnpj = farmaciaRequest.getCnpj();
+        farmaciaRepoService.cnpjAlreadyRegistered(cnpj);
 
-        Farmacia farmacia = farmaciaRepoService.Get(farmaciaRequest.getCnpj());
-        if(farmacia.getCnpj() != null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ApiNotFoundException("cnpj",
-                            "Esta farmácia já existe, ou os seus dados estão inválidos!")
-            );
-        }
         FarmaciaResponse farmaciaResponse = mapper.map(
                 farmaciaRepoService.Save(
                         mapper.map(farmaciaRequest, Farmacia.class)

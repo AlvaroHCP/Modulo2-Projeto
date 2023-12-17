@@ -25,8 +25,14 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         ApiErrorResponse error = new ApiErrorResponse(exception.getClass().getSimpleName(), exception.toString());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     };
+    @ExceptionHandler(ApiAlreadyRegisteredException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleApiAlreadyRegisteredException(ApiAlreadyRegisteredException exception){
+        ApiErrorResponse error = new ApiErrorResponse(exception.getClass().getSimpleName(), exception.toString());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    };
 
-    //FIXME: A mensagem de erro ainda está ruim. Consertar.
+    //FIXME: A mensagem de erro ainda está imprimindo campos nulos.
     @Override
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
