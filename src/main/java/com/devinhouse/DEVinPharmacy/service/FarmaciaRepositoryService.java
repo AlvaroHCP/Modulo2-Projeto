@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FarmaciaRepositoryService {
@@ -48,5 +47,4 @@ public class FarmaciaRepositoryService {
     public List<Farmacia> SaveAll(List<Farmacia> farmacias){
         return farmaciaRepo.saveAll(farmacias);
     };
-
 }
