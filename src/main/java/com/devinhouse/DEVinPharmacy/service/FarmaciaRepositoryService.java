@@ -1,5 +1,6 @@
 package com.devinhouse.DEVinPharmacy.service;
 
+import com.devinhouse.DEVinPharmacy.exception.ApiNotFoundException;
 import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.repository.FarmaciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,10 @@ public class FarmaciaRepositoryService {
         List<Farmacia> farmacias = farmaciaRepo.findAll()
                 .stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
         if(farmacias.isEmpty()) {
-//            throw new NotFoundException(cnpj, "Registro Não encontrado.");
-            Farmacia farmacia = new Farmacia();
+            throw new ApiNotFoundException(cnpj.getClass().getSimpleName(), "Registro Não encontrado.");
+//            Farmacia farmacia = new Farmacia();
 //            farmacia.setCnpj(cnpj);
-            return farmacia;
+//            return farmacia;
         }
 
         return farmacias.get(0);

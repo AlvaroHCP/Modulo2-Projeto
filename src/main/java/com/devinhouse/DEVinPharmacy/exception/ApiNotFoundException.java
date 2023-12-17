@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiNotFoundException {
+public class ApiNotFoundException extends RuntimeException {
     private String codigo;
 
     private String message;
