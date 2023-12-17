@@ -1,5 +1,6 @@
 package com.devinhouse.DEVinPharmacy.service;
 
+import com.devinhouse.DEVinPharmacy.dto.FarmaciaRequest;
 import com.devinhouse.DEVinPharmacy.dto.FarmaciaResponse;
 import com.devinhouse.DEVinPharmacy.exception.ApiAlreadyRegisteredException;
 import com.devinhouse.DEVinPharmacy.exception.ApiNotFoundException;
@@ -42,8 +43,9 @@ public class FarmaciaRepositoryService {
         }
     };
 
-    public Farmacia Save(Farmacia farmacia){
-        return farmaciaRepo.save(farmacia);
+    public FarmaciaResponse Save(FarmaciaRequest farmacia){
+        Farmacia response = farmaciaRepo.save(mapper.map(farmacia, Farmacia.class));
+        return mapper.map(response, FarmaciaResponse.class);
     };
 
     public List<Farmacia> SaveAll(List<Farmacia> farmacias){

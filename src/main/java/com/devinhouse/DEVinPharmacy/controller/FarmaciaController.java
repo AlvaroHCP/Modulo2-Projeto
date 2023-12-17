@@ -41,11 +41,7 @@ public class FarmaciaController {
         Long cnpj = farmaciaRequest.getCnpj();
         farmaciaRepoService.cnpjAlreadyRegistered(cnpj);
 
-        FarmaciaResponse farmaciaResponse = mapper.map(
-                farmaciaRepoService.Save(
-                        mapper.map(farmaciaRequest, Farmacia.class)
-                ), FarmaciaResponse.class
-        );
+        FarmaciaResponse farmaciaResponse = farmaciaRepoService.Save(farmaciaRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(farmaciaResponse);
     }
 }
