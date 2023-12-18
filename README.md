@@ -47,7 +47,7 @@ utilizando a porta local http://localhost:8080/.
 
 #### 1. Inicialização
 
-- /inicializacao (POST): Rota utilizada para alimentar o banco de dados 
+- (POST) <strong>/inicializacao</strong>: Rota utilizada para alimentar o banco de dados 
 com as informações já cadastradas no próprio sistema.
 
 Essa rota alimenta o sistema com todos os dados de Farmácias, 
@@ -55,21 +55,21 @@ Medicamentos, e Estoque, para persistˆncia no Banco de Dados.
 
 #### 2. Farmácias
 
-- /farmacias (GET): Rota para consultar todas as farmácias do banco de dados.
-- /farmacias/{cnpj} (GET): Rota para consultar uma farrmácia específica pelo cnpj dela no banco de dados.
-- /farmacias (POST): Rota para cadastrar uma nova farmácia no sistema. Os dados devem ser enviados como JSON no corpo da requisição Http.
+- (GET) <strong>/farmacias</strong>: Rota para consultar todas as farmácias do banco de dados.
+- (GET) <strong>/farmacias/{cnpj}</strong>: Rota para consultar uma farrmácia específica pelo cnpj dela no banco de dados.
+- (POST) <strong>/farmacias</strong>: Rota para cadastrar uma nova farmácia no sistema. Os dados devem ser enviados como JSON no corpo da requisição Http.
 
 #### 3. Medicamentos
 
-- /medicamentos (GET): Rota para consultar todos os medicamentos do banco de dados.
-- /medicamentos (POST): Rota para cadastrar um novo medicamento no sistema. Os dados devem ser enviados como JSON no corpo da requisição Http.
+- (GET) <strong>/medicamentos</strong>: Rota para consultar todos os medicamentos do banco de dados.
+- (POST) <strong>/medicamentos</strong>: Rota para cadastrar um novo medicamento no sistema. Os dados devem ser enviados como JSON no corpo da requisição Http.
 
 #### 4. Estoques
 
-- /estoque/{cnpj} (GET): Rota para consultar no banco de dados tod o estoque de3 uma farmácia, dado o seu cnpj.
-- /estoque (POST): Rota para adicionar uma certa quantidade de medicamento a uma farmácia. Os dados devem ser passados no formato JSON no corpo da requisição.
-- /estoque (DELETE): Rota para diminuir uma quantidade de medicamento d uma dada farmácia. Os dados devem ser passados no formato JSON no corpo da requisição.
-- /estoque (PUT): Rota que faz a troca de medicamento entre duas farmácias. O medicamento sai do estoque de uma, e é adicionado ao estoque da outra.  Os dados devem ser passados no formato JSON no corpo da requisição.
+- (GET) <strong>/estoque/{cnpj}</strong>: Rota para consultar no banco de dados tod o estoque de3 uma farmácia, dado o seu cnpj.
+- (POST) <strong>/estoque</strong>: Rota para adicionar uma certa quantidade de medicamento a uma farmácia. Os dados devem ser passados no formato JSON no corpo da requisição.
+- (DELETE) <strong>/estoque</strong>: Rota para diminuir uma quantidade de medicamento d uma dada farmácia. Os dados devem ser passados no formato JSON no corpo da requisição.
+- (PUT) <strong>/estoque</strong>: Rota que faz a troca de medicamento entre duas farmácias. O medicamento sai do estoque de uma, e é adicionado ao estoque da outra.  Os dados devem ser passados no formato JSON no corpo da requisição.
 
 ## O que pode melhorar?
 
