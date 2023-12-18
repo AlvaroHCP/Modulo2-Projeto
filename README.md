@@ -30,7 +30,7 @@ Foi criado um esquema REST em camadas para tratar do desenvolvimento da API, e s
 
 O sistema pode ser visto no [vídeo do Projeto](https://drive.google.com/file/d/1UGGAWjVcAkvxQTexvIhv2fo5vwbIcpnu/view?usp=share_link).
 
-
+E a documentação via Swagger foi gerada no endereço localhost:8080/docs.html, e pode ser vista [Aqui](localhost:8080/docs.html).
 
 ### Por dentro do Sistema
 
@@ -72,7 +72,10 @@ Medicamentos, e Estoque, para persistˆncia no Banco de Dados.
 
 ## O que pode melhorar?
 
-- 
+- Melhorar a execução dos serviços para limpar mais o código.
+- Criar o relacionamento entre as entidades Farmácia e Endereço de forma a usar @OnetoOne
+- Criar classe de serviço que faça o reconhecimento das farmácias mais próximas para transferir medicamentos.
 
-![imagem](<./.png>)
+
+[//]: # (![imagem]&#40;<./.png>&#41;)
 
