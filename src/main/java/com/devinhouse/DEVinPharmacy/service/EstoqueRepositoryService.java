@@ -5,6 +5,8 @@ import com.devinhouse.DEVinPharmacy.dto.*;
 import com.devinhouse.DEVinPharmacy.exception.ApiBadRequestException;
 import com.devinhouse.DEVinPharmacy.exception.ApiNotFoundException;
 import com.devinhouse.DEVinPharmacy.model.Estoque;
+import com.devinhouse.DEVinPharmacy.model.Farmacia;
+import com.devinhouse.DEVinPharmacy.model.Medicamento;
 import com.devinhouse.DEVinPharmacy.repository.EstoqueRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +23,22 @@ public class EstoqueRepositoryService {
     @Autowired
     EstoqueRepository estoqueRepo;
     @Autowired
+    FarmaciaRepositoryService farmaciaRepoService;
+    @Autowired
     MedicamentoRepositoryService medicamentoRepoService;
     @Autowired
     ModelMapper mapper;
+
+    public boolean cnpjAndNroRegistroExists(Long cnpj, Integer nroRegistro){
+        boolean cnpjExists = farmaciaRepoService.cnpjExists(cnpj);
+        if(!cnpjExists)
+            throw new ApiNotFoundException(Farmacia.class.getSimpleName(), cnpj.toString());
+
+        boolean nroRegistroExists = medicamentoRepoService.nroRegistroExists(nroRegistro);
+        if(!nroRegistroExists)
+            throw new ApiNotFoundException(Medicamento.class.getSimpleName(), nroRegistro.toString());
+        return true;
+    };
 
     public List<Estoque> GetAll(){
         return estoqueRepo.findAll();
@@ -58,29 +73,14 @@ public class EstoqueRepositoryService {
     };
 
     public EstoqueAlteracaoResponse GetByCnpjAndRegistro(Long cnpj, Integer nroRegistro){
-        EstoqueAlteracaoResponse responseCnpjNroRegistro = new EstoqueAlteracaoResponse();
         List<Estoque> estoqueCnpj = GetEstoqueByCnpj(cnpj);
-        if(estoqueCnpj.isEmpty()) {
-            responseCnpjNroRegistro.setNroRegistro(nroRegistro);
-            return responseCnpjNroRegistro;
-        }
-        List<Estoque> estoqueNroRegistro = GetEstoqueByNroRegistro(nroRegistro);
-        if(estoqueNroRegistro.isEmpty()) {
-            responseCnpjNroRegistro.setCnpj(cnpj);
-            return responseCnpjNroRegistro;
-        }
-        responseCnpjNroRegistro.setCnpj(cnpj);
         List<Estoque> estoqueCnpjNroRegistro = estoqueCnpj.stream().filter(item ->
                 item.getNroRegistro().equals(nroRegistro)).toList();
-        if(estoqueCnpjNroRegistro.isEmpty()) {
-            responseCnpjNroRegistro.setCnpj(cnpj);
-            responseCnpjNroRegistro.setNroRegistro(nroRegistro);
-            return responseCnpjNroRegistro;
-        }
+        if(estoqueCnpjNroRegistro.isEmpty())
+            return new EstoqueAlteracaoResponse();
 
         EstoqueAlteracaoResponse estoqueResponse = mapper.map(
                 estoqueCnpjNroRegistro.get(0), EstoqueAlteracaoResponse.class);
-
         return estoqueResponse;
     };
 
@@ -92,9 +92,10 @@ public class EstoqueRepositoryService {
         return estoques.get(0);
     };
 
-    public Estoque Save(Estoque estoque){
+    public EstoqueAlteracaoResponse Save(EstoqueRequest estoqueRequest){
+        Estoque estoque = mapper.map(estoqueRequest, Estoque.class);
         estoque.setDataAtualizacao(LocalDateTime.now());
-        return estoqueRepo.save(estoque);
+        return Save(mapper.map(estoque, EstoqueAlteracaoResponse.class));
     };
     public EstoqueAlteracaoResponse Save(EstoqueAlteracaoResponse estoque){
         estoque.setDataAtualizacao(LocalDateTime.now());

@@ -3,6 +3,8 @@ package com.devinhouse.DEVinPharmacy.controller;
 import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.dto.*;
 import com.devinhouse.DEVinPharmacy.service.EstoqueRepositoryService;
+import com.devinhouse.DEVinPharmacy.service.FarmaciaRepositoryService;
+import com.devinhouse.DEVinPharmacy.service.MedicamentoRepositoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
@@ -35,24 +37,17 @@ public class EstoqueController {
         final Integer quantidadeRequest = estoqueRequest.getQuantidade();
 
         estoqueRepoService.quantidadePositiva(quantidadeRequest);
+        estoqueRepoService.cnpjAndNroRegistroExists(cnpjRequest, nroRegistroRequest);
 
-        List<EstoqueResponse> estoqueResponse = estoqueRepoService.GetAllByCnpj(cnpjRequest);
-        EstoqueAlteracaoResponse estoqueAlteracaoResponse =
-                estoqueRepoService.GetByCnpjAndRegistro(cnpjRequest, nroRegistroRequest);
+        EstoqueAlteracaoResponse response = estoqueRepoService.GetByCnpjAndRegistro(cnpjRequest, nroRegistroRequest);
+        boolean responseIsNull = response.getCnpj() == null;
 
-        ResponseEntity<Object> cnpjNroRegistroResponse = estoqueRepoService.cnpjNroRegistroExistentes(
-                estoqueRequest, estoqueAlteracaoResponse);
-        if(cnpjNroRegistroResponse.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
-            EstoqueAlteracaoResponse estoqueCriado = estoqueRepoService.Save(
-                    mapper.map(estoqueRequest, EstoqueAlteracaoResponse.class)
-            );
-            return ResponseEntity.ok(estoqueCriado);
-        };
-        if(! cnpjNroRegistroResponse.getStatusCode().equals(HttpStatus.OK))
-            return cnpjNroRegistroResponse;
+        if(responseIsNull) {
+            response = estoqueRepoService.Save(mapper.map(estoqueRequest, EstoqueAlteracaoResponse.class));
+            return ResponseEntity.ok(response);
+        }
 
-        EstoqueAlteracaoResponse estoqueAtualizado = estoqueRepoService.aumentarEstoque(
-                estoqueAlteracaoResponse, quantidadeRequest);
+        EstoqueAlteracaoResponse estoqueAtualizado = estoqueRepoService.aumentarEstoque(response, quantidadeRequest);
         return ResponseEntity.ok(estoqueAtualizado);
     };
 
@@ -63,8 +58,7 @@ public class EstoqueController {
         final Integer nroRegistroRequest = estoqueRequest.getNroRegistro();
         final Integer quantidadeRequest = estoqueRequest.getQuantidade();
 
-        estoqueRepoService.quantidadePositiva(
-                quantidadeRequest);
+        estoqueRepoService.quantidadePositiva(quantidadeRequest);
 //        if(! quantidadeResponse.getStatusCode().equals(HttpStatus.OK))
 //            return quantidadeResponse;
 

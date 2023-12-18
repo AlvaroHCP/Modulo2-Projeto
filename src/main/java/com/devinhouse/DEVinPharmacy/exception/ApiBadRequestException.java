@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ApiBadRequestException extends RuntimeException{
     private String nome;
-    private String registro;
+    private String mensagem;
 
     @Override
     public String toString() {
-        return "'" + nome + "' " + registro +".";
+        return "'" + nome + "' " + mensagem +".";
     }
 }

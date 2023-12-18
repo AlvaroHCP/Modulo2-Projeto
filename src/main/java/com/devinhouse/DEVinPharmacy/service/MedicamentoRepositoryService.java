@@ -21,10 +21,14 @@ public class MedicamentoRepositoryService {
     ModelMapper mapper;
 
     public void nroRegistroAlreadyRegistered(Integer nroRegistro){
-        boolean medicamento = medicamentoRepo.existsById(nroRegistro);
+        boolean medicamento = nroRegistroExists(nroRegistro);
         if(medicamento) {
             throw new ApiAlreadyRegisteredException(Medicamento.class.getSimpleName(), nroRegistro.toString());
         }
+    };
+
+    public boolean nroRegistroExists(Integer nroRegistro){
+        return medicamentoRepo.existsById(nroRegistro);
     };
 
     public List<MedicamentoResponse> GetAll(){

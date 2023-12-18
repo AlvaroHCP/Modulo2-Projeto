@@ -33,10 +33,14 @@ public class FarmaciaRepositoryService {
     };
 
     public void cnpjAlreadyRegistered(Long cnpj){
-        boolean farmacia = farmaciaRepo.existsById(cnpj);
+        boolean farmacia = cnpjExists(cnpj);
         if(farmacia) {
             throw new ApiAlreadyRegisteredException("Cnpj", cnpj.toString());
         }
+    };
+
+    public boolean cnpjExists(Long cnpj){
+        return farmaciaRepo.existsById(cnpj);
     };
 
     public FarmaciaResponse Save(FarmaciaRequest farmacia){
