@@ -13,10 +13,10 @@ O sistema foi desenvolvido utilizando
 
 Também foram empregadas tecnologias do Spring Boot como:
 
-- []()
-- []()
-- []()
-- []()
+- [Lombok]()
+- [Spring Validation]()
+- [Model Mapper]()
+- [Swagger]()
 
 Para o monitoramento das respostas do sistema desenvolvido 
 foi utilizado o [Postman](), para enviar requisições e receber 
@@ -24,7 +24,12 @@ as respostas da aplicação.
 
 ### O Projeto
 
-O sistema desenvolvido ...
+O sistema desenvolvido em Java 17, usando o Spring Boot 3.2.0.
+
+Foi criado um esquema REST em camadas para tratar do desenvolvimento da API, e separar as responsabilidades de cada entidade.
+
+O sistema pode ser visto no [vídeo do Projeto](https://drive.google.com/file/d/1UGGAWjVcAkvxQTexvIhv2fo5vwbIcpnu/view?usp=share_link).
+
 
 
 ### Por dentro do Sistema
