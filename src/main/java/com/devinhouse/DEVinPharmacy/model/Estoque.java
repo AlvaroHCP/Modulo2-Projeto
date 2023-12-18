@@ -3,7 +3,6 @@ package com.devinhouse.DEVinPharmacy.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -12,7 +11,6 @@ import java.time.LocalDateTime;
 @Table(name = "ESTOQUES")
 @IdClass(IdEstoque.class)
 @Data
-//@NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Estoque {

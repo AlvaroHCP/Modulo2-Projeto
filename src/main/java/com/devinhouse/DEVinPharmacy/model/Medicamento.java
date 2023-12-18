@@ -4,13 +4,11 @@ import com.devinhouse.DEVinPharmacy.data.TipoMedicamento;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Entity
 @Table(name = "MEDICAMENTOS")
 @Data
-//@NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Medicamento {

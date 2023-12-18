@@ -1,17 +1,14 @@
 package com.devinhouse.DEVinPharmacy.service;
 
-import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.dto.*;
-import com.devinhouse.DEVinPharmacy.exception.ApiBadRequestException;
-import com.devinhouse.DEVinPharmacy.exception.ApiNotFoundException;
+import com.devinhouse.DEVinPharmacy.exception.BadRequestException;
+import com.devinhouse.DEVinPharmacy.exception.NotFoundException;
 import com.devinhouse.DEVinPharmacy.model.Estoque;
 import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.model.Medicamento;
 import com.devinhouse.DEVinPharmacy.repository.EstoqueRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,11 +29,11 @@ public class EstoqueRepositoryService {
     public boolean cnpjAndNroRegistroExists(Long cnpj, Integer nroRegistro){
         boolean cnpjExists = farmaciaRepoService.cnpjExists(cnpj);
         if(!cnpjExists)
-            throw new ApiNotFoundException(Farmacia.class.getSimpleName(), cnpj.toString());
+            throw new NotFoundException(Farmacia.class.getSimpleName(), cnpj.toString());
 
         boolean nroRegistroExists = medicamentoRepoService.nroRegistroExists(nroRegistro);
         if(!nroRegistroExists)
-            throw new ApiNotFoundException(Medicamento.class.getSimpleName(), nroRegistro.toString());
+            throw new NotFoundException(Medicamento.class.getSimpleName(), nroRegistro.toString());
         return true;
     };
 
@@ -48,10 +45,11 @@ public class EstoqueRepositoryService {
         return estoqueRepo.findAll()
                 .stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
     };
-    public List<EstoqueAlteracaoResponse> GetByCnpj(Long cnpj){
-        List<Estoque> consulta = estoqueRepo.findAll()
-                .stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
-        return consulta.stream().map(item -> mapper.map(item, EstoqueAlteracaoResponse.class)).toList();
+    public EstoqueAlteracaoResponse GetIfExistsByCnpj(Long cnpj, String message){
+        List<Estoque> consulta = estoqueRepo.findAll().stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
+        if(consulta.isEmpty())
+            throw new NotFoundException(Farmacia.class.getSimpleName(), message);
+        return mapper.map(consulta.get(0), EstoqueAlteracaoResponse.class);
     };
 
     public List<Estoque> GetEstoqueByNroRegistro(Integer nroRegistro){
@@ -84,11 +82,23 @@ public class EstoqueRepositoryService {
         return estoqueResponse;
     };
 
+    public EstoqueAlteracaoResponse GetByCnpjAndRegistroToDelete(Long cnpj, Integer nroRegistro){
+        List<Estoque> estoqueCnpj = GetEstoqueByCnpj(cnpj);
+        List<Estoque> estoqueCnpjNroRegistro = estoqueCnpj.stream().filter(item ->
+                item.getNroRegistro().equals(nroRegistro)).toList();
+        if(estoqueCnpjNroRegistro.isEmpty())
+            throw new NotFoundException(Estoque.class.getSimpleName(), "( cnpj = "+ cnpj + ", nroRegistro = " + nroRegistro);
+
+        EstoqueAlteracaoResponse estoqueResponse = mapper.map(
+                estoqueCnpjNroRegistro.get(0), EstoqueAlteracaoResponse.class);
+        return estoqueResponse;
+    };
+
     public Estoque Get(Long cnpj) {
         List<Estoque> estoques = estoqueRepo.findAll()
                 .stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
         if(estoques.isEmpty())
-            throw new ApiNotFoundException(Estoque.class.getSimpleName(), cnpj.toString());
+            throw new NotFoundException(Estoque.class.getSimpleName(), cnpj.toString());
         return estoques.get(0);
     };
 
@@ -129,30 +139,18 @@ public class EstoqueRepositoryService {
         }
         return aquisicao;
     }
-    public ResponseEntity<Object> estoqueResultantePositivo(EstoqueAlteracaoResponse aquisicao, Integer quantidade){
+    public boolean estoqueResultantePositivo(EstoqueAlteracaoResponse aquisicao, Integer quantidade){
         int estoqueResultante = aquisicao.getQuantidade() - quantidade;
         if(estoqueResultante < 0)
-            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "Quantidade a ser vendida é maior que o estoque atual!");
-        return ResponseEntity.ok().build();
+            throw new BadRequestException("quantidade", "a ser vendida é maior que o estoque atual!");
+        return true;
     }
 
     public void quantidadePositiva(Integer quantidade){
         if(quantidade < 1)
-            throw new ApiBadRequestException("quantidade", "deve ser um número inteiro maior que zero!");
+            throw new BadRequestException("quantidade", "deve ser um número inteiro maior que zero!");
     };
 
-    public ResponseEntity<Object> cnpjNroRegistroExistentes(EstoqueRequest request, EstoqueAlteracaoResponse response){
-        if(response.getCnpj() == null)
-            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "CNPJ não existente!");
-
-        if(response.getNroRegistro() == null)
-            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "Número de Registro não existente!");
-
-        if(response.getQuantidade() == null && response.getDataAtualizacao() == null) {
-            return MyHttpResponse.statusBody(HttpStatus.NOT_FOUND, "Número de Registro não encontrado para este Cnpj");
-        };
-        return ResponseEntity.ok().build();
-    };
 
     public EstoqueTrocaResponse trocaResponse(EstoqueTrocaRequest trocaRequest,
                                               EstoqueAlteracaoResponse responseDeletado,

@@ -2,8 +2,8 @@ package com.devinhouse.DEVinPharmacy.service;
 
 import com.devinhouse.DEVinPharmacy.dto.FarmaciaRequest;
 import com.devinhouse.DEVinPharmacy.dto.FarmaciaResponse;
-import com.devinhouse.DEVinPharmacy.exception.ApiAlreadyRegisteredException;
-import com.devinhouse.DEVinPharmacy.exception.ApiNotFoundException;
+import com.devinhouse.DEVinPharmacy.exception.AlreadyExistsException;
+import com.devinhouse.DEVinPharmacy.exception.NotFoundException;
 import com.devinhouse.DEVinPharmacy.model.Farmacia;
 import com.devinhouse.DEVinPharmacy.repository.FarmaciaRepository;
 import org.modelmapper.ModelMapper;
@@ -27,7 +27,7 @@ public class FarmaciaRepositoryService {
         List<Farmacia> farmacias = farmaciaRepo.findAll()
                 .stream().filter(item -> item.getCnpj().equals(cnpj)).toList();
         if(farmacias.isEmpty()) {
-            throw new ApiNotFoundException("Cnpj", cnpj.toString());
+            throw new NotFoundException("Cnpj", cnpj.toString());
         }
         return mapper.map(farmacias.get(0), FarmaciaResponse.class);
     };
@@ -35,7 +35,7 @@ public class FarmaciaRepositoryService {
     public void cnpjAlreadyRegistered(Long cnpj){
         boolean farmacia = cnpjExists(cnpj);
         if(farmacia) {
-            throw new ApiAlreadyRegisteredException("Cnpj", cnpj.toString());
+            throw new AlreadyExistsException("Cnpj", cnpj.toString());
         }
     };
 

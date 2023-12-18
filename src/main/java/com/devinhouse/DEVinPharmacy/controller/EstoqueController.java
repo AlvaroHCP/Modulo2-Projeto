@@ -1,15 +1,11 @@
 package com.devinhouse.DEVinPharmacy.controller;
 
-import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.dto.*;
 import com.devinhouse.DEVinPharmacy.service.EstoqueRepositoryService;
-import com.devinhouse.DEVinPharmacy.service.FarmaciaRepositoryService;
-import com.devinhouse.DEVinPharmacy.service.MedicamentoRepositoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +26,7 @@ public class EstoqueController {
     };
 
     @PostMapping
-    public ResponseEntity<Object> estoqueAquisicao(@RequestBody @Valid @NotNull
+    public ResponseEntity<EstoqueAlteracaoResponse> estoqueAquisicao(@RequestBody @Valid @NotNull
                                               EstoqueRequest estoqueRequest){
         final Long cnpjRequest = estoqueRequest.getCnpj();
         final Integer nroRegistroRequest = estoqueRequest.getNroRegistro();
@@ -40,9 +36,9 @@ public class EstoqueController {
         estoqueRepoService.cnpjAndNroRegistroExists(cnpjRequest, nroRegistroRequest);
 
         EstoqueAlteracaoResponse response = estoqueRepoService.GetByCnpjAndRegistro(cnpjRequest, nroRegistroRequest);
-        boolean responseIsNull = response.getCnpj() == null;
+        boolean cpfAndNroRegistroNotExists = response.getCnpj() == null;
 
-        if(responseIsNull) {
+        if(cpfAndNroRegistroNotExists) {
             response = estoqueRepoService.Save(mapper.map(estoqueRequest, EstoqueAlteracaoResponse.class));
             return ResponseEntity.ok(response);
         }
@@ -52,32 +48,21 @@ public class EstoqueController {
     };
 
     @DeleteMapping
-    public ResponseEntity<Object> estoqueDelecao(@RequestBody @Valid @NotNull
+    public ResponseEntity<EstoqueAlteracaoResponse> estoqueDelecao(@RequestBody @Valid @NotNull
                                               EstoqueRequest estoqueRequest){
         final Long cnpjRequest = estoqueRequest.getCnpj();
         final Integer nroRegistroRequest = estoqueRequest.getNroRegistro();
         final Integer quantidadeRequest = estoqueRequest.getQuantidade();
 
         estoqueRepoService.quantidadePositiva(quantidadeRequest);
-//        if(! quantidadeResponse.getStatusCode().equals(HttpStatus.OK))
-//            return quantidadeResponse;
+        estoqueRepoService.cnpjAndNroRegistroExists(cnpjRequest, nroRegistroRequest);
 
-        List<EstoqueResponse> estoqueResponse = estoqueRepoService.GetAllByCnpj(cnpjRequest);
-        EstoqueAlteracaoResponse estoqueAlteracaoResponse =
-                estoqueRepoService.GetByCnpjAndRegistro(cnpjRequest, nroRegistroRequest);
+        EstoqueAlteracaoResponse response = estoqueRepoService.GetByCnpjAndRegistroToDelete(cnpjRequest, nroRegistroRequest);
 
-        ResponseEntity<Object> cnpjNroRegistroResponse = estoqueRepoService.cnpjNroRegistroExistentes(
-                estoqueRequest, estoqueAlteracaoResponse);
-        if(! cnpjNroRegistroResponse.getStatusCode().equals(HttpStatus.OK))
-            return cnpjNroRegistroResponse;
+        estoqueRepoService.estoqueResultantePositivo(response, quantidadeRequest);
 
-        ResponseEntity<Object> reducaoPositiva = estoqueRepoService.estoqueResultantePositivo(
-                estoqueAlteracaoResponse, quantidadeRequest);
-        if(! reducaoPositiva.getStatusCode().equals(HttpStatus.OK)) {
-            return reducaoPositiva;
-        }
         EstoqueAlteracaoResponse estoqueAtualizado = estoqueRepoService.diminuirEstoque(
-                estoqueAlteracaoResponse, quantidadeRequest);
+                response, quantidadeRequest);
 
         return ResponseEntity.ok(estoqueAtualizado);
     };
@@ -86,15 +71,11 @@ public class EstoqueController {
     public ResponseEntity<Object> estoqueTroca(@RequestBody @Valid @NotNull
                                                EstoqueTrocaRequest trocaRequest){
 
-        List<EstoqueAlteracaoResponse> existeCnpjOrigem = estoqueRepoService.GetByCnpj(
-                trocaRequest.getCnpjOrigem());
-        if(existeCnpjOrigem.isEmpty())
-            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "CNPJ de Origem não existente!");
+        EstoqueAlteracaoResponse existeCnpjOrigem = estoqueRepoService.GetIfExistsByCnpj(
+                trocaRequest.getCnpjOrigem(),"CNPJ de Origem!");
 
-        List<EstoqueAlteracaoResponse> existeCnpjDestino = estoqueRepoService.GetByCnpj(
-                trocaRequest.getCnpjDestino());
-        if(existeCnpjDestino.isEmpty())
-            return MyHttpResponse.statusBody(HttpStatus.BAD_REQUEST, "CNPJ de Destino não existente!");
+        EstoqueAlteracaoResponse existeCnpjDestino = estoqueRepoService.GetIfExistsByCnpj(
+                trocaRequest.getCnpjDestino(),"CNPJ de Destino!");
 
         EstoqueRequest estoqueOrigem = new EstoqueRequest(
                 trocaRequest.getCnpjOrigem(),
@@ -105,14 +86,10 @@ public class EstoqueController {
                 trocaRequest.getNroRegistro(),
                 trocaRequest.getQuantidade());
 
-        ResponseEntity<Object> deletado = estoqueDelecao(estoqueOrigem);
-        if(deletado.getStatusCode().value() != HttpStatus.OK.value())
-            return deletado;
+        ResponseEntity<EstoqueAlteracaoResponse> deletado = estoqueDelecao(estoqueOrigem);
         EstoqueAlteracaoResponse responseDeletado = mapper.map(deletado.getBody(), EstoqueAlteracaoResponse.class);
 
-        ResponseEntity<Object> adicionado = estoqueAquisicao(estoqueDestino);
-        if(adicionado.getStatusCode().value() != HttpStatus.OK.value())
-            return adicionado;
+        ResponseEntity<EstoqueAlteracaoResponse> adicionado = estoqueAquisicao(estoqueDestino);
         EstoqueAlteracaoResponse responseAdicionado = mapper.map(adicionado.getBody(), EstoqueAlteracaoResponse.class);
 
         EstoqueTrocaResponse trocaResponse = estoqueRepoService.trocaResponse( trocaRequest,

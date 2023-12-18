@@ -7,13 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiNotFoundException extends RuntimeException {
+public class BadRequestException extends RuntimeException{
     private String nome;
-    private String registro;
+    private String mensagem;
 
     @Override
     public String toString() {
-        return "Registro não encontrado para '" + nome +
-                "' com Id = '" + registro +"'.";
+        return "'" + nome + "' " + mensagem +".";
     }
 }

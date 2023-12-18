@@ -18,23 +18,23 @@ import java.util.Map;
 
 @ControllerAdvice
 public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(ApiNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<Object> handleApiNotFoundException(ApiNotFoundException exception){
+    public ResponseEntity<Object> handleApiNotFoundException(NotFoundException exception){
         ApiErrorResponse error = new ApiErrorResponse(exception.getClass().getSimpleName(), exception.toString());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     };
 
-    @ExceptionHandler(ApiBadRequestException.class)
+    @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleApiBadRequestException(ApiBadRequestException exception){
+    public ResponseEntity<Object> handleApiBadRequestException(BadRequestException exception){
         ApiErrorResponse error = new ApiErrorResponse(exception.getClass().getSimpleName(), exception.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     };
 
-    @ExceptionHandler(ApiAlreadyRegisteredException.class)
+    @ExceptionHandler(AlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleApiAlreadyRegisteredException(ApiAlreadyRegisteredException exception){
+    public ResponseEntity<Object> handleApiAlreadyRegisteredException(AlreadyExistsException exception){
         ApiErrorResponse error = new ApiErrorResponse(exception.getClass().getSimpleName(), exception.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     };

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiAlreadyRegisteredException extends RuntimeException {
+public class AlreadyExistsException extends RuntimeException {
     private String nome;
     private String registro;
 

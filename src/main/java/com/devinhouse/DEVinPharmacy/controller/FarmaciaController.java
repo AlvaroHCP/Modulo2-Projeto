@@ -1,6 +1,5 @@
 package com.devinhouse.DEVinPharmacy.controller;
 
-import com.devinhouse.DEVinPharmacy.connection.MyHttpResponse;
 import com.devinhouse.DEVinPharmacy.dto.FarmaciaRequest;
 import com.devinhouse.DEVinPharmacy.dto.FarmaciaResponse;
 import com.devinhouse.DEVinPharmacy.service.FarmaciaRepositoryService;
@@ -22,7 +21,7 @@ public class FarmaciaController {
     @GetMapping
     public ResponseEntity<List<FarmaciaResponse>> farmaciasGet(){
         List<FarmaciaResponse> farmacias = farmaciaRepoService.GetAll();
-        return MyHttpResponse.farmaciasOk(farmacias);
+        return ResponseEntity.ok(farmacias);
     };
 
     @GetMapping("/{cnpj}")

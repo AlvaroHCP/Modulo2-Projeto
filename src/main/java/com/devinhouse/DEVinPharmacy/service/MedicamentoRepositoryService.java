@@ -2,8 +2,8 @@ package com.devinhouse.DEVinPharmacy.service;
 
 import com.devinhouse.DEVinPharmacy.dto.MedicamentoRequest;
 import com.devinhouse.DEVinPharmacy.dto.MedicamentoResponse;
-import com.devinhouse.DEVinPharmacy.exception.ApiAlreadyRegisteredException;
-import com.devinhouse.DEVinPharmacy.exception.ApiNotFoundException;
+import com.devinhouse.DEVinPharmacy.exception.AlreadyExistsException;
+import com.devinhouse.DEVinPharmacy.exception.NotFoundException;
 import com.devinhouse.DEVinPharmacy.model.Medicamento;
 import com.devinhouse.DEVinPharmacy.repository.MedicamentoRepository;
 import org.modelmapper.ModelMapper;
@@ -23,7 +23,7 @@ public class MedicamentoRepositoryService {
     public void nroRegistroAlreadyRegistered(Integer nroRegistro){
         boolean medicamento = nroRegistroExists(nroRegistro);
         if(medicamento) {
-            throw new ApiAlreadyRegisteredException(Medicamento.class.getSimpleName(), nroRegistro.toString());
+            throw new AlreadyExistsException(Medicamento.class.getSimpleName(), nroRegistro.toString());
         }
     };
 
@@ -39,7 +39,7 @@ public class MedicamentoRepositoryService {
         List<Medicamento> medicamentos = medicamentoRepo.findAll()
                 .stream().filter(item -> item.getNroRegistro().equals(registro)).toList();
         if(medicamentos.isEmpty())
-            throw new ApiNotFoundException(Medicamento.class.getSimpleName(), registro.toString());
+            throw new NotFoundException(Medicamento.class.getSimpleName(), registro.toString());
 
         return mapper.map(medicamentos.get(0),MedicamentoResponse.class);
     };

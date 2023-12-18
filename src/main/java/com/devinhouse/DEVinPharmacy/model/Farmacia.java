@@ -3,13 +3,11 @@ package com.devinhouse.DEVinPharmacy.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Entity
 @Table(name="FARMACIAS")
 @Data
-//@NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Farmacia {

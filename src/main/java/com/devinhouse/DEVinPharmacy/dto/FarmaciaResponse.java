@@ -1,11 +1,8 @@
 package com.devinhouse.DEVinPharmacy.dto;
 
 import com.devinhouse.DEVinPharmacy.model.Endereco;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.NonNullFields;
 
 @Data
 @NoArgsConstructor
