@@ -7,19 +7,20 @@
 ### Tecnologias
 
 O sistema foi desenvolvido utilizando 
-[Java](), 
-[PostgreSql](), e 
-[Spring Boot]().
+[Java](https://www.java.com), 
+[PostgreSql](https://www.postgresql.org), e 
+[Spring Boot](https://spring.io/projects/spring-boot).
 
 Também foram empregadas tecnologias do Spring Boot como:
 
-- [Lombok]()
-- [Spring Validation]()
-- [Model Mapper]()
-- [Swagger]()
+- [Lombok](https://projectlombok.org)
+- [Spring Validation](https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html)
+- [Model Mapper](https://modelmapper.org)
+- [Swagger](https://swagger.io)
+- [OpenAPI](https://springdoc.org)
 
 Para o monitoramento das respostas do sistema desenvolvido 
-foi utilizado o [Postman](), para enviar requisições e receber 
+foi utilizado o [Postman](https://www.postman.com), para enviar requisições e receber 
 as respostas da aplicação.
 
 ### O Projeto
@@ -37,10 +38,10 @@ E a documentação via Swagger foi gerada no endereço localhost:8080/docs.html,
 - git clone: https://github.com/AlvaroHCP/Modulo2-Projeto.git
 
 Rodar o sistema usando a IDE de sua preferência e pronto. 
-Aqui foi utilizado o [IntelliJ]().
+Aqui foi utilizado o [IntelliJ](https://www.jetbrains.com/pt-br/idea/).
 
 Agora já se pode enviar e receber requisições do sistema 
-utilizando a porta local http://localhost:7666/.
+utilizando a porta local http://localhost:8080/.
 
 ### Serviços e Rotas
 
@@ -76,6 +77,4 @@ Medicamentos, e Estoque, para persistˆncia no Banco de Dados.
 - Criar o relacionamento entre as entidades Farmácia e Endereço de forma a usar @OnetoOne
 - Criar classe de serviço que faça o reconhecimento das farmácias mais próximas para transferir medicamentos.
 
-
-[//]: # (![imagem]&#40;<./.png>&#41;)
 
